@@ -1,0 +1,112 @@
+/**
+ * @file card_colour.hpp
+ *
+ * Definition of a 'card_colour' enumeration type.
+ *
+ * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ */
+
+#ifndef _CARD_COLOUR_HPP_
+#define _CARD_COLOUR_HPP_
+
+/*===========================================================================*\
+ * system header files
+\*===========================================================================*/
+#if defined(DEBUG_ENUMERATION)
+#include <iostream>
+#endif
+
+/*===========================================================================*\
+ * project header files
+\*===========================================================================*/
+#include "enumeration.hpp"
+
+/*===========================================================================*\
+ * preprocessor #define constants and macros
+\*===========================================================================*/
+#define CARD_COLOURS \
+    CARD_COLOUR(HEARTS) \
+    CARD_COLOUR(DIAMONDS) \
+    CARD_COLOUR(CLUBS) \
+    CARD_COLOUR(SPADES) \
+
+/*===========================================================================*\
+ * inline function definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * global type definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+enum class card_colour_e : int32_t
+{
+#define CARD_COLOUR(id) id,
+    CARD_COLOURS
+#undef CARD_COLOUR
+};
+
+constexpr static inline const char* to_string(card_colour_e e)
+{
+    const char *str = "invalid 'card_colour_e' value";
+
+    switch (e) {
+#define CARD_COLOUR(id) case card_colour_e::id: str = #id; break;
+        CARD_COLOURS
+#undef CARD_COLOUR
+    }
+
+    return str;
+}
+
+class card_colour : public enumeration<card_colour_e>
+{
+public:
+    constexpr card_colour(const card_colour_e& e) :
+        enumeration<card_colour_e>(e)
+    {
+#if defined(DEBUG_ENUMERATION)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+        std::cout << to_string() << std::endl;
+#endif
+    }
+
+    constexpr const char* to_string() const
+    {
+        return ymn::to_string(m_value);
+    }
+};
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * global object declarations
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * function forward declarations
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+#endif /* _CARD_COLOUR_HPP_ */

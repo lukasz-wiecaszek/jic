@@ -1,0 +1,123 @@
+TEST(shared_ptr, copy_assigment_operator_1)
+{
+    base *ptr = new base(1);
+    shared_ptr<base> sptr;
+
+    EXPECT_EQ(0, sptr.use_count());
+    EXPECT_FALSE(sptr);
+
+    sptr = ptr;
+
+    EXPECT_EQ(1, sptr.use_count());
+    EXPECT_TRUE(sptr);
+
+    std::cout << (std::string)sptr << std::endl;
+}
+
+TEST(shared_ptr, copy_assigment_operator_2)
+{
+    shared_ptr<base> sptr1(new base(1));
+    shared_ptr<base> sptr2;
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
+
+    sptr2 = sptr1;
+
+    EXPECT_EQ(2, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(2, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+
+    std::cout << (std::string)sptr1 << std::endl;
+    std::cout << (std::string)sptr2 << std::endl;
+}
+
+TEST(shared_ptr, copy_assigment_operator_3)
+{
+    shared_ptr<base> sptr1(new base(1));
+    shared_ptr<base> sptr2;
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
+
+    sptr2 = std::move(sptr1);
+
+    EXPECT_EQ(0, sptr1.use_count());
+    EXPECT_FALSE(sptr1);
+
+    EXPECT_EQ(1, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+
+    std::cout << (std::string)sptr1 << std::endl;
+    std::cout << (std::string)sptr2 << std::endl;
+}
+
+TEST(shared_ptr, copy_assigment_operator_4)
+{
+    derived *ptr = new derived(1);
+    shared_ptr<base> sptr;
+
+    EXPECT_EQ(0, sptr.use_count());
+    EXPECT_FALSE(sptr);
+
+    sptr = ptr;
+
+    EXPECT_EQ(1, sptr.use_count());
+    EXPECT_TRUE(sptr);
+
+    std::cout << (std::string)sptr << std::endl;
+}
+
+TEST(shared_ptr, copy_assigment_operator_5)
+{
+    shared_ptr<derived> sptr1(new derived(1));
+    shared_ptr<base> sptr2;
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
+
+    sptr2 = sptr1;
+
+    EXPECT_EQ(2, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(2, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+
+    std::cout << (std::string)sptr1 << std::endl;
+    std::cout << (std::string)sptr2 << std::endl;
+}
+
+TEST(shared_ptr, copy_assigment_operator_6)
+{
+    shared_ptr<derived> sptr1(new derived(1));
+    shared_ptr<base> sptr2;
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
+
+    sptr2 = std::move(sptr1);
+
+    EXPECT_EQ(0, sptr1.use_count());
+    EXPECT_FALSE(sptr1);
+
+    EXPECT_EQ(1, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+
+    std::cout << (std::string)sptr1 << std::endl;
+    std::cout << (std::string)sptr2 << std::endl;
+}
