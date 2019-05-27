@@ -197,10 +197,15 @@ bool parser_mpeg2ts::transport_rate::calculate(const uint8_t* tsp)
            if (pid == m_pcr_pid) {
               if (parser_mpeg2ts_has_pcr(tsp)) { /* 2nd pcr */
                  m_pcr2 = parser_mpeg2ts_get_pcr(tsp);
-                 m_transport_rate = m_no_of_packets * 27000000 /
-                     (m_pcr2 - m_pcr1);
-
-                 status = true;
+                 if (m_pcr2 > m_pcr1) {
+                     m_transport_rate = m_no_of_packets * 27000000 /
+                         (m_pcr2 - m_pcr1);
+                     status = true;
+                 }
+                 else {
+                     m_pcr1 = m_pcr2;
+                     m_no_of_packets = 0;
+                 }
               }
            }
         }
