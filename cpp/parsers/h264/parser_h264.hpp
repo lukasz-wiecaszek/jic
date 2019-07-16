@@ -62,7 +62,6 @@
     PARSER_H264_STATUS(PPS_PARSED) \
     PARSER_H264_STATUS(SEI_PARSED) \
     PARSER_H264_STATUS(SLICE_PARSED) \
-    PARSER_H264_STATUS(PICTURE_AVAILABLE) \
 
 #define PARSER_H264_STRUCTURES \
     PARSER_H264_STRUCTURE(AUD) \
@@ -78,14 +77,6 @@
 #define H264_PARSER_STRUCTURE_ID_PREVIOUS     (-2)
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -98,19 +89,6 @@ enum class parser_h264_container_e : int32_t
 #undef PARSER_H264_CONTAINER
 };
 
-constexpr static inline const char* to_string(parser_h264_container_e e)
-{
-    const char *str = "invalid 'parser_h264_container_e' value";
-
-    switch (e) {
-#define PARSER_H264_CONTAINER(id) case parser_h264_container_e::id: str = #id; break;
-            PARSER_H264_CONTAINERS
-#undef PARSER_H264_CONTAINER
-    }
-
-    return str;
-}
-
 enum class parser_h264_status_e : int32_t
 {
 #define PARSER_H264_STATUS(id) id,
@@ -118,38 +96,12 @@ enum class parser_h264_status_e : int32_t
 #undef PARSER_H264_STATUS
 };
 
-constexpr static inline const char* to_string(parser_h264_status_e e)
-{
-    const char *str = "invalid 'parser_status_e' value";
-
-    switch (e) {
-#define PARSER_H264_STATUS(id) case parser_h264_status_e::id: str = #id; break;
-            PARSER_H264_STATUSES
-#undef PARSER_H264_STATUS
-    }
-
-    return str;
-}
-
 enum class parser_h264_structure_e : int32_t
 {
 #define PARSER_H264_STRUCTURE(id) id,
     PARSER_H264_STRUCTURES
 #undef PARSER_H264_STRUCTURE
 };
-
-constexpr static inline const char* to_string(parser_h264_structure_e e)
-{
-    const char *str = "invalid 'parser_h264_structure_e' value";
-
-    switch (e) {
-#define PARSER_H264_STRUCTURE(id) case parser_h264_structure_e::id: str = #id; break;
-            PARSER_H264_STRUCTURES
-#undef PARSER_H264_STRUCTURE
-    }
-
-    return str;
-}
 
 class parser_h264 : public parser_base<uint8_t>
 {
@@ -265,8 +217,8 @@ private:
      */
     int find_nal_unit();
 
-    void parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (&lists)[SCALING_LIST_NUM], int list);
-    void parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (&lists)[SCALING_LIST_NUM], int list);
+    void parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (&lists)[SL_4x4_NUM], int list);
+    void parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (&lists)[SL_8x8_NUM], int list);
     void parse_scaling_matrices_4x4(istream_be& s, h264::scaling_matrices& sm);
     void parse_scaling_matrices_8x8(istream_be& s, h264::scaling_matrices& sm, uint32_t chroma_format_idc);
     bool parse_scaling_matrices(istream_be& s, h264::scaling_matrices& sm, bool parse8x8, uint32_t chroma_format_idc);
@@ -304,6 +256,53 @@ private:
 
     h264::slice_header m_slice_header;
 };
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+constexpr const char* to_string(parser_h264_container_e e)
+{
+    const char *str = "invalid 'parser_h264_container_e' value";
+
+    switch (e) {
+#define PARSER_H264_CONTAINER(id) case parser_h264_container_e::id: str = #id; break;
+            PARSER_H264_CONTAINERS
+#undef PARSER_H264_CONTAINER
+    }
+
+    return str;
+}
+
+constexpr const char* to_string(parser_h264_status_e e)
+{
+    const char *str = "invalid 'parser_status_e' value";
+
+    switch (e) {
+#define PARSER_H264_STATUS(id) case parser_h264_status_e::id: str = #id; break;
+            PARSER_H264_STATUSES
+#undef PARSER_H264_STATUS
+    }
+
+    return str;
+}
+
+constexpr const char* to_string(parser_h264_structure_e e)
+{
+    const char *str = "invalid 'parser_h264_structure_e' value";
+
+    switch (e) {
+#define PARSER_H264_STRUCTURE(id) case parser_h264_structure_e::id: str = #id; break;
+            PARSER_H264_STRUCTURES
+#undef PARSER_H264_STRUCTURE
+    }
+
+    return str;
+}
 
 } /* end of namespace ymn */
 

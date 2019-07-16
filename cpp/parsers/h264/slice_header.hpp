@@ -42,17 +42,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -119,6 +108,17 @@ struct slice_header : public h264_structure
 private:
     const pps* m_active_pps;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
 
 inline std::string slice_header::to_string() const
 {

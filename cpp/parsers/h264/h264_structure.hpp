@@ -33,36 +33,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-inline bool more_rbsp_data(istream_be& s)
-{
-    std::size_t bits;
-    uint32_t value;
-
-    if (s.tell() >= s.size())
-        return false;
-
-    if (s.tell() < s.size() - 1)
-        return true;
-
-    bits = 8 - s.tell_bits();
-
-    if (!s.peek_bits(bits, value))
-        return false;
-
-    if (value == (1U << (bits - 1)))
-        return false;
-
-    return true;
-}
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -104,6 +74,36 @@ protected:
 private:
     bool m_valid;
 };
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+inline bool more_rbsp_data(istream_be& s)
+{
+    std::size_t bits;
+    uint32_t value;
+
+    if (s.tell() >= s.size())
+        return false;
+
+    if (s.tell() < s.size() - 1)
+        return true;
+
+    bits = 8 - s.tell_bits();
+
+    if (!s.peek_bits(bits, value))
+        return false;
+
+    if (value == (1U << (bits - 1)))
+        return false;
+
+    return true;
+}
 
 } /* end of namespace ymn */
 

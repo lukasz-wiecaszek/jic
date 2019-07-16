@@ -53,7 +53,15 @@
 #endif
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -199,14 +207,6 @@ static inline CONSTEXPR uint64_t le64tocpu(uint64_t le64)
     else
         return swap(le64);
 }
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
 
 } /* end of namespace ymn */
 

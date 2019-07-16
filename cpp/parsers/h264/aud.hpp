@@ -36,35 +36,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-constexpr static inline const char* primary_pic_type_to_string(uint32_t primary_pic_type)
-{
-    const char* str = "invalid 'primary_pic_type' value";
-
-    switch (primary_pic_type) {
-        case 0: str = "(I)"; break;
-        case 1: str = "(I, P)"; break;
-        case 2: str = "(I, P, B)"; break;
-        case 3: str = "(SI)"; break;
-        case 4: str = "(SI, SP)"; break;
-        case 5: str = "(I, SI)"; break;
-        case 6: str = "(I, SI, P, SP)"; break;
-        case 7: str = "(I, SI, P, SP, B)"; break;
-    }
-
-    return str;
-}
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -83,6 +54,35 @@ struct aud : public h264_structure
 
     uint32_t primary_pic_type;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* primary_pic_type_to_string(uint32_t primary_pic_type)
+{
+    const char* str = "invalid 'primary_pic_type' value";
+
+    switch (primary_pic_type) {
+        case 0: str = "(I)"; break;
+        case 1: str = "(I, P)"; break;
+        case 2: str = "(I, P, B)"; break;
+        case 3: str = "(SI)"; break;
+        case 4: str = "(SI, SP)"; break;
+        case 5: str = "(I, SI)"; break;
+        case 6: str = "(I, SI, P, SP)"; break;
+        case 7: str = "(I, SI, P, SP, B)"; break;
+    }
+
+    return str;
+}
 
 inline std::string aud::to_string() const
 {

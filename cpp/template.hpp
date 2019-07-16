@@ -39,19 +39,6 @@
 #define MY_PREPROCESSOR_MACRO(x) ((x) + 42)
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-static inline void my_inline_function_definition()
-{
-    return 42;
-}
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -84,6 +71,19 @@ private:
     T m_member2;
     T m_member3;
 };
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+static inline void my_inline_function_definition()
+{
+    return 42;
+}
 
 } /* end of namespace ymn */
 

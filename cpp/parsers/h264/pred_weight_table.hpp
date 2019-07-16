@@ -38,17 +38,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -87,6 +76,17 @@ struct pred_weight_table : public h264_structure
     uint32_t num_ref_idx_l1_active_minus1;
     lx l1;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
 
 inline std::string pred_weight_table::to_string() const
 {

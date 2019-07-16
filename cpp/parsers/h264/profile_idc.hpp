@@ -21,6 +21,7 @@
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
+#include <cstdint>
 
 /*===========================================================================*\
  * project header files
@@ -43,7 +44,7 @@
     PROFILE_INDICATOR(SCALABLE_HIGH,     86) \
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -57,7 +58,18 @@ enum class profile_idc_e : int32_t
 #undef PROFILE_INDICATOR
 };
 
-constexpr static inline const char* to_string(profile_idc_e e)
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* to_string(profile_idc_e e)
 {
     const char* str = "invalid 'profile_idc_e' value";
 
@@ -71,14 +83,6 @@ constexpr static inline const char* to_string(profile_idc_e e)
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-
 } /* end of namespace ymn */
 
 /*===========================================================================*\

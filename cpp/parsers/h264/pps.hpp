@@ -41,22 +41,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-constexpr static inline const char* entropy_coding_mode_flag_to_string(uint32_t entropy_coding_mode_flag)
-{
-    return entropy_coding_mode_flag ? "cabac" : "cavlc";
-}
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -128,6 +112,22 @@ struct pps : public h264_structure
 private:
     const sps* m_active_sps;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* entropy_coding_mode_flag_to_string(uint32_t entropy_coding_mode_flag)
+{
+    return entropy_coding_mode_flag ? "cabac" : "cavlc";
+}
 
 inline std::string pps::to_string() const
 {

@@ -60,7 +60,15 @@
     chk_range(#struct"."#item, struct.item, min, max, ostream)
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -118,14 +126,6 @@ inline bool chk_range(const char* item_name, T item_value, T min, T max, std::os
 
     return false;
 }
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
 
 } /* end of namespace ymn */
 

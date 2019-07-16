@@ -40,71 +40,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-constexpr static inline const char* aspect_ratio_idc_to_string(uint32_t aspect_ratio_idc)
-{
-    const char* str = "invalid 'aspect_ratio_idc' value";
-
-    if (aspect_ratio_idc <= 255) {
-        switch (aspect_ratio_idc) {
-            case   0: str = "unspecified"; break;
-            case   1: str = "1:1 (square)"; break;
-            case   2: str = "12:11"; break;
-            case   3: str = "10:11"; break;
-            case   4: str = "16:11"; break;
-            case   5: str = "40:33"; break;
-            case   6: str = "24:11"; break;
-            case   7: str = "20:11"; break;
-            case   8: str = "32:11"; break;
-            case   9: str = "80:33"; break;
-            case  10: str = "18:11"; break;
-            case  11: str = "15:11"; break;
-            case  12: str = "64:33"; break;
-            case  13: str = "160:99"; break;
-            case  14: str = "4:3"; break;
-            case  15: str = "3:2"; break;
-            case  16: str = "2:1"; break;
-            case 255: str = "extended sample aspect ratio"; break;
-            default:
-                str = "reserved";
-                break;
-        }
-    }
-
-    return str;
-}
-
-constexpr static inline const char* video_format_to_string(uint32_t video_format)
-{
-    const char* str = "invalid 'video_format' value";
-
-    if (video_format <= 7) {
-        switch (video_format) {
-            case 0: str = "component"; break;
-            case 1: str = "pal"; break;
-            case 2: str = "ntsc"; break;
-            case 3: str = "secam"; break;
-            case 4: str = "mac"; break;
-            case 5: str = "unspecified video format"; break;
-            default:
-                str = "reserved";
-                break;
-        }
-    }
-
-    return str;
-}
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -160,6 +95,71 @@ struct vui_parameters : public h264_structure
         uint32_t max_num_reorder_frames;
         uint32_t max_dec_frame_buffering;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* aspect_ratio_idc_to_string(uint32_t aspect_ratio_idc)
+{
+    const char* str = "invalid 'aspect_ratio_idc' value";
+
+    if (aspect_ratio_idc <= 255) {
+        switch (aspect_ratio_idc) {
+            case   0: str = "unspecified"; break;
+            case   1: str = "1:1 (square)"; break;
+            case   2: str = "12:11"; break;
+            case   3: str = "10:11"; break;
+            case   4: str = "16:11"; break;
+            case   5: str = "40:33"; break;
+            case   6: str = "24:11"; break;
+            case   7: str = "20:11"; break;
+            case   8: str = "32:11"; break;
+            case   9: str = "80:33"; break;
+            case  10: str = "18:11"; break;
+            case  11: str = "15:11"; break;
+            case  12: str = "64:33"; break;
+            case  13: str = "160:99"; break;
+            case  14: str = "4:3"; break;
+            case  15: str = "3:2"; break;
+            case  16: str = "2:1"; break;
+            case 255: str = "extended sample aspect ratio"; break;
+            default:
+                str = "reserved";
+                break;
+        }
+    }
+
+    return str;
+}
+
+constexpr const char* video_format_to_string(uint32_t video_format)
+{
+    const char* str = "invalid 'video_format' value";
+
+    if (video_format <= 7) {
+        switch (video_format) {
+            case 0: str = "component"; break;
+            case 1: str = "pal"; break;
+            case 2: str = "ntsc"; break;
+            case 3: str = "secam"; break;
+            case 4: str = "mac"; break;
+            case 5: str = "unspecified video format"; break;
+            default:
+                str = "reserved";
+                break;
+        }
+    }
+
+    return str;
+}
 
 inline std::string vui_parameters::to_string() const
 {

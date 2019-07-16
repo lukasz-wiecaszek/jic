@@ -282,9 +282,6 @@ static void parser_h264_parse(ymn::parser_h264& parser)
                 break;
             }
 
-            case ymn::parser_h264_status_e::PICTURE_AVAILABLE:
-                break;
-
             default:
                 break;
        }

@@ -70,52 +70,7 @@
 #define ISTREAM_STATUS_STREAM_CORRUPTED      (1 << 2)
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-static inline const char* istream_status_to_string(uint32_t status)
-{
-    if (status == ISTREAM_STATUS_OK)
-        return "ok";
-    else {
-        std::ostringstream stream;
-
-        if (status & ISTREAM_STATUS_EOS_REACHED) {
-            stream << "eos";
-            if (status > ISTREAM_STATUS_EOS_REACHED)
-                stream << ", ";
-        }
-
-        if (status & ISTREAM_STATUS_IMPROPER_ALLIGMENT) {
-            stream << "alligment";
-            if (status > ISTREAM_STATUS_IMPROPER_ALLIGMENT)
-                stream << ", ";
-        }
-
-        if (status & ISTREAM_STATUS_STREAM_CORRUPTED) {
-            stream << "corrupted";
-            if (status > ISTREAM_STATUS_STREAM_CORRUPTED)
-                stream << ", ";
-        }
-
-        return stream.str().c_str();
-    }
-}
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global object declarations
 \*===========================================================================*/
 namespace ymn
 {
@@ -875,7 +830,7 @@ public:
         stream << ", position: ";
         stream << static_cast<std::string>(m_position);
         stream << ", status: ";
-        stream << istream_status_to_string(m_status);
+        stream << status_to_string(m_status);
         stream << "]";
 
         return stream.str();
@@ -884,6 +839,35 @@ public:
     operator std::string () const
     {
         return to_string();
+    }
+
+    static const char* status_to_string(uint32_t status)
+    {
+        if (status == ISTREAM_STATUS_OK)
+            return "ok";
+        else {
+            std::ostringstream stream;
+
+            if (status & ISTREAM_STATUS_EOS_REACHED) {
+                stream << "eos";
+                if (status > ISTREAM_STATUS_EOS_REACHED)
+                    stream << ", ";
+            }
+
+            if (status & ISTREAM_STATUS_IMPROPER_ALLIGMENT) {
+                stream << "alligment";
+                if (status > ISTREAM_STATUS_IMPROPER_ALLIGMENT)
+                    stream << ", ";
+            }
+
+            if (status & ISTREAM_STATUS_STREAM_CORRUPTED) {
+                stream << "corrupted";
+                if (status > ISTREAM_STATUS_STREAM_CORRUPTED)
+                    stream << ", ";
+            }
+
+            return stream.str().c_str();
+        }
     }
 
 private:
@@ -1008,6 +992,22 @@ private:
 
 using istream_be = istream<STREAM_BYTE_ORDER_BIG_ENDIAN>;
 using istream_le = istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN>;
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * global object declarations
+\*===========================================================================*/
+namespace ymn
+{
 
 } /* end of namespace ymn */
 

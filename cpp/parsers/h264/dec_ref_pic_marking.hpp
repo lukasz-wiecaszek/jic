@@ -39,17 +39,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -70,17 +59,6 @@ struct dec_ref_pic_marking_idr : public h264_structure
     uint32_t long_term_reference_flag;
 };
 
-inline std::string dec_ref_pic_marking_idr::to_string() const
-{
-    std::ostringstream stream;
-
-    stream << "  decoded reference picture marking (idr):" << std::endl;
-    stream << P2(no_output_of_prior_pics_flag);
-    stream << P2(long_term_reference_flag);
-
-    return stream.str();
-}
-
 struct dec_ref_pic_marking_nonidr : public h264_structure
 {
     dec_ref_pic_marking_nonidr() :
@@ -99,6 +77,28 @@ struct dec_ref_pic_marking_nonidr : public h264_structure
         uint32_t max_long_term_frame_idx_plus1;
     } mmco[4];
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+inline std::string dec_ref_pic_marking_idr::to_string() const
+{
+    std::ostringstream stream;
+
+    stream << "  decoded reference picture marking (idr):" << std::endl;
+    stream << P2(no_output_of_prior_pics_flag);
+    stream << P2(long_term_reference_flag);
+
+    return stream.str();
+}
 
 inline std::string dec_ref_pic_marking_nonidr::to_string() const
 {

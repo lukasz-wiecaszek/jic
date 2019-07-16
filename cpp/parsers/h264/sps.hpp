@@ -40,31 +40,6 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-constexpr static inline const char* chroma_format_idc_to_string(uint32_t chroma_format_idc)
-{
-    const char* str = "invalid 'chroma_format_idc' value";
-
-    switch (chroma_format_idc) {
-        case 0: str = "monochrome"; break;
-        case 1: str = "4:2:0"; break;
-        case 2: str = "4:2:2"; break;
-        case 3: str = "4:4:4"; break;
-    }
-
-    return str;
-}
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -126,6 +101,31 @@ struct sps : public h264_structure
     uint32_t vui_parameters_present_flag;
     vui_parameters vui;
 };
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* chroma_format_idc_to_string(uint32_t chroma_format_idc)
+{
+    const char* str = "invalid 'chroma_format_idc' value";
+
+    switch (chroma_format_idc) {
+        case 0: str = "monochrome"; break;
+        case 1: str = "4:2:0"; break;
+        case 2: str = "4:2:2"; break;
+        case 3: str = "4:4:4"; break;
+    }
+
+    return str;
+}
 
 inline std::string sps::to_string() const
 {

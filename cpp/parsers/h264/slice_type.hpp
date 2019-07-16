@@ -21,6 +21,7 @@
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
+#include <cstdint>
 
 /*===========================================================================*\
  * project header files
@@ -37,7 +38,7 @@
     SLICE_TYPE(SI, 4) \
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -51,7 +52,18 @@ enum class slice_type_e : int32_t
 #undef SLICE_TYPE
 };
 
-constexpr static inline const char* to_string(slice_type_e e)
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* to_string(slice_type_e e)
 {
     const char* str = "invalid 'slice_type_e' value";
 
@@ -64,40 +76,32 @@ constexpr static inline const char* to_string(slice_type_e e)
     return str;
 }
 
-constexpr static inline slice_type_e to_slice_type_e(uint32_t v)
+constexpr slice_type_e to_slice_type_e(uint32_t v)
 {
     return static_cast<slice_type_e>(v % 5);
 }
 
-constexpr static inline bool operator == (uint32_t v, slice_type_e s)
+constexpr bool operator == (uint32_t v, slice_type_e s)
 {
     return to_slice_type_e(v) == s;
 }
 
-constexpr static inline bool operator == (slice_type_e s, uint32_t v)
+constexpr bool operator == (slice_type_e s, uint32_t v)
 {
     return v == s;
 }
 
-constexpr static inline bool operator != (uint32_t v, slice_type_e s)
+constexpr bool operator != (uint32_t v, slice_type_e s)
 {
     return !(v == s);
 }
 
-constexpr static inline bool operator != (slice_type_e s, uint32_t v)
+constexpr bool operator != (slice_type_e s, uint32_t v)
 {
     return !(s == v);
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-
 } /* end of namespace ymn */
 
 /*===========================================================================*\

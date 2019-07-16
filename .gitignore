@@ -24,3 +24,6 @@
 *.ear
 *.py[cod]
 
+# Others
+*.gcno
+

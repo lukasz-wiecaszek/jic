@@ -38,23 +38,7 @@
 #define BITS_PER_BYTE 8
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global object declarations
 \*===========================================================================*/
 namespace ymn
 {
@@ -187,7 +171,15 @@ struct istream_position
     std::size_t m_bit_position;
 };
 
-constexpr inline istream_position operator + (const istream_position& other, std::size_t bits)
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+constexpr istream_position operator + (const istream_position& other, std::size_t bits)
 {
     std::size_t number_of_bits = other.to_bits() + bits;
 
@@ -196,7 +188,7 @@ constexpr inline istream_position operator + (const istream_position& other, std
     return pos;
 }
 
-constexpr inline istream_position operator + (std::size_t bits, const istream_position& other)
+constexpr istream_position operator + (std::size_t bits, const istream_position& other)
 {
     std::size_t number_of_bits = bits + other.to_bits();
 
@@ -205,7 +197,7 @@ constexpr inline istream_position operator + (std::size_t bits, const istream_po
     return pos;
 }
 
-constexpr inline istream_position operator - (const istream_position& other, std::size_t bits)
+constexpr istream_position operator - (const istream_position& other, std::size_t bits)
 {
     std::size_t number_of_bits = other.to_bits() + bits;
 
@@ -214,7 +206,7 @@ constexpr inline istream_position operator - (const istream_position& other, std
     return pos;
 }
 
-constexpr inline istream_position operator - (std::size_t bits, const istream_position& other)
+constexpr istream_position operator - (std::size_t bits, const istream_position& other)
 {
     std::size_t number_of_bits = bits + other.to_bits();
 
@@ -222,6 +214,14 @@ constexpr inline istream_position operator - (std::size_t bits, const istream_po
 
     return pos;
 }
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * global object declarations
+\*===========================================================================*/
+namespace ymn
+{
 
 } /* end of namespace ymn */
 

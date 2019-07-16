@@ -59,7 +59,7 @@
 #define P4_INFO(item, info) L(item, 8) << ": " << info << std::endl
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -67,7 +67,7 @@ namespace ymn
 } /* end of namespace ymn */
 
 /*===========================================================================*\
- * global type definitions
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {

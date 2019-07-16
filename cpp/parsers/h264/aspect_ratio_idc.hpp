@@ -51,7 +51,7 @@
     ASPECT_RATIO_INDICATOR(SAR_EXTENDED,    255) \
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -65,7 +65,18 @@ enum class aspect_ratio_idc_e : int32_t
 #undef ASPECT_RATIO_INDICATOR
 };
 
-constexpr static inline const char* to_string(aspect_ratio_idc_e e)
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* to_string(aspect_ratio_idc_e e)
 {
     const char* str = "invalid 'aspect_ratio_idc_e' value";
 
@@ -79,14 +90,6 @@ constexpr static inline const char* to_string(aspect_ratio_idc_e e)
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-
 } /* end of namespace ymn */
 
 /*===========================================================================*\

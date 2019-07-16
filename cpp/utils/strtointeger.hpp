@@ -36,7 +36,15 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -169,14 +177,6 @@ inline strtointeger_conversion_status_e strtointeger(const char* str, T& value)
     else
         return strtosi(str, value);
 }
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
 
 } /* end of namespace ymn */
 

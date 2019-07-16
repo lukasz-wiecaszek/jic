@@ -32,13 +32,21 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {
 
 template<typename T>
-constexpr static inline int ilog2(T n)
+constexpr int ilog2(T n)
 {
     /* Because the noexcept operator always returns true for a constant expression, */
     /* it can be used to check if a particular invocation of a constexpr */
@@ -121,24 +129,16 @@ constexpr static inline int ilog2(T n)
 }
 
 template<typename T>
-constexpr static inline int ilog2_rounddown(T n)
+constexpr int ilog2_rounddown(T n)
 {
     return ilog2(n);
 }
 
 template<typename T>
-constexpr static inline int ilog2_roundup(T n)
+constexpr int ilog2_roundup(T n)
 {
     return is_power_of_two(n) ? ilog2(n) : ilog2(n) + 1;
 }
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
 
 } /* end of namespace ymn */
 

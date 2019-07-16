@@ -83,7 +83,7 @@ private:
 } /* end of namespace ymn */
 
 /*===========================================================================*\
- * inline function definitions
+ * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {

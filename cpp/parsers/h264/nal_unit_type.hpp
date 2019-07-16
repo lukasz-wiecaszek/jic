@@ -64,7 +64,7 @@
     NAL_UNIT_TYPE(RESERVED8,                     31) \
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
@@ -76,7 +76,15 @@ enum class nal_unit_type_e : int32_t
 #undef NAL_UNIT_TYPE
 };
 
-constexpr static inline const char* to_string(nal_unit_type_e e)
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+constexpr const char* to_string(nal_unit_type_e e)
 {
     const char *str = "invalid 'nal_unit_type_e' value";
 
@@ -88,14 +96,6 @@ constexpr static inline const char* to_string(nal_unit_type_e e)
 
     return str;
 }
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
 
 } /* end of namespace ymn */
 

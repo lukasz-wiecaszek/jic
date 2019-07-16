@@ -37,14 +37,38 @@
 \*===========================================================================*/
 
 /*===========================================================================*\
- * inline function definitions
+ * global type definitions
 \*===========================================================================*/
 namespace ymn
 {
 namespace h264
 {
 
-constexpr static inline const char* sei_payload_type_to_string(uint32_t sei_payload_type)
+struct sei : public h264_structure
+{
+    sei() :
+        h264_structure()
+    {
+    }
+
+    std::string to_string() const override;
+
+    uint32_t payload_type;
+    uint32_t payload_size;
+};
+
+} /* end of namespace h264 */
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+namespace h264
+{
+
+constexpr const char* sei_payload_type_to_string(uint32_t sei_payload_type)
 {
     const char* str = "invalid 'sei_payload_type' value";
 
@@ -102,30 +126,6 @@ constexpr static inline const char* sei_payload_type_to_string(uint32_t sei_payl
 
     return str;
 }
-
-} /* end of namespace h264 */
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * global type definitions
-\*===========================================================================*/
-namespace ymn
-{
-namespace h264
-{
-
-struct sei : public h264_structure
-{
-    sei() :
-        h264_structure()
-    {
-    }
-
-    std::string to_string() const override;
-
-    uint32_t payload_type;
-    uint32_t payload_size;
-};
 
 inline std::string sei::to_string() const
 {

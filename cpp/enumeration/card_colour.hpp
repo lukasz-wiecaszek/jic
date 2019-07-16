@@ -40,14 +40,6 @@
     CARD_COLOUR(SPADES) \
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -59,19 +51,6 @@ enum class card_colour_e : int32_t
     CARD_COLOURS
 #undef CARD_COLOUR
 };
-
-constexpr static inline const char* to_string(card_colour_e e)
-{
-    const char *str = "invalid 'card_colour_e' value";
-
-    switch (e) {
-#define CARD_COLOUR(id) case card_colour_e::id: str = #id; break;
-        CARD_COLOURS
-#undef CARD_COLOUR
-    }
-
-    return str;
-}
 
 class card_colour : public enumeration<card_colour_e>
 {
@@ -85,11 +64,34 @@ public:
 #endif
     }
 
-    constexpr const char* to_string() const
-    {
-        return ymn::to_string(m_value);
-    }
+    constexpr const char* to_string() const;
 };
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+constexpr const char* to_string(card_colour_e e)
+{
+    const char *str = "invalid 'card_colour_e' value";
+
+    switch (e) {
+#define CARD_COLOUR(id) case card_colour_e::id: str = #id; break;
+        CARD_COLOURS
+#undef CARD_COLOUR
+    }
+
+    return str;
+}
+
+constexpr const char* card_colour::to_string() const
+{
+    return ymn::to_string(m_value);
+}
 
 } /* end of namespace ymn */
 

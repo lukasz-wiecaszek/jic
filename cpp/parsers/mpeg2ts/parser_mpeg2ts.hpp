@@ -56,32 +56,6 @@
     PARSER_MPEG2TS_STATUS(TRANSPORT_RATE_DETECTED) \
 
 /*===========================================================================*\
- * inline function definitions
-\*===========================================================================*/
-namespace ymn
-{
-
-static inline mpeg2ts_pid parser_mpeg2ts_get_pid(const uint8_t* tsp)
-{
-   return mpeg2ts_pid(((tsp[1] << 8) + tsp[2]) & 0x1fff);
-}
-
-static inline bool parser_mpeg2ts_has_pcr(const uint8_t* tsp)
-{
-   return ((tsp[3] & 0x20)  &&  // if adaptation field is present
-           (tsp[4])         &&  // and has non-zero value
-           (tsp[5] & 0x10));    // and if PCR flag is present
-}
-
-static inline uint64_t parser_mpeg2ts_get_pcr(const uint8_t* tsp)
-{
-   uint64_t pcr_base = (((uint64_t)((tsp[6] << 24) + (tsp[7] << 16) + (tsp[8] << 8) + tsp[9]) << 8) | tsp[10]) >> 7;
-   return 1ULL + pcr_base * 300 + (((tsp[10] << 8) | tsp[11]) & 0x1ff);
-}
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
 namespace ymn
@@ -93,19 +67,6 @@ enum class parser_mpeg2ts_status_e : int32_t
     PARSER_MPEG2TS_STATUSES
 #undef PARSER_MPEG2TS_STATUS
 };
-
-constexpr static inline const char* to_string(parser_mpeg2ts_status_e e)
-{
-    const char *str = "invalid 'parser_mpeg2ts_status_e' value";
-
-    switch (e) {
-#define PARSER_MPEG2TS_STATUS(id) case parser_mpeg2ts_status_e::id: str = #id; break;
-            PARSER_MPEG2TS_STATUSES
-#undef PARSER_MPEG2TS_STATUS
-    }
-
-    return str;
-}
 
 class parser_mpeg2ts : public parser_base<uint8_t>
 {
@@ -241,6 +202,45 @@ private:
 
     transport_rate m_transport_rate;
 };
+
+} /* end of namespace ymn */
+
+/*===========================================================================*\
+ * inline function/variable definitions
+\*===========================================================================*/
+namespace ymn
+{
+
+inline mpeg2ts_pid parser_mpeg2ts_get_pid(const uint8_t* tsp)
+{
+   return mpeg2ts_pid(((tsp[1] << 8) + tsp[2]) & 0x1fff);
+}
+
+inline bool parser_mpeg2ts_has_pcr(const uint8_t* tsp)
+{
+   return ((tsp[3] & 0x20)  &&  // if adaptation field is present
+           (tsp[4])         &&  // and has non-zero value
+           (tsp[5] & 0x10));    // and if PCR flag is present
+}
+
+inline uint64_t parser_mpeg2ts_get_pcr(const uint8_t* tsp)
+{
+   uint64_t pcr_base = (((uint64_t)((tsp[6] << 24) + (tsp[7] << 16) + (tsp[8] << 8) + tsp[9]) << 8) | tsp[10]) >> 7;
+   return 1ULL + pcr_base * 300 + (((tsp[10] << 8) | tsp[11]) & 0x1ff);
+}
+
+constexpr const char* to_string(parser_mpeg2ts_status_e e)
+{
+    const char *str = "invalid 'parser_mpeg2ts_status_e' value";
+
+    switch (e) {
+#define PARSER_MPEG2TS_STATUS(id) case parser_mpeg2ts_status_e::id: str = #id; break;
+            PARSER_MPEG2TS_STATUSES
+#undef PARSER_MPEG2TS_STATUS
+    }
+
+    return str;
+}
 
 } /* end of namespace ymn */
 

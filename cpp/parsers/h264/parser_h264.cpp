@@ -57,34 +57,6 @@ static int h264_parser_nal_to_rbsp(
 /*===========================================================================*\
  * local object definitions
 \*===========================================================================*/
-static const uint8_t default_scaling_matrices_4x4[2][16] =
-{
-    {  6, 13, 20, 28, 13, 20, 28, 32,
-      20, 28, 32, 37, 28, 32, 37, 42 },
-    { 10, 14, 20, 24, 14, 20, 24, 27,
-      20, 24, 27, 30, 24, 27, 30, 34 }
-};
-
-static const uint8_t default_scaling_matrices_8x8[2][64] =
-{
-    {  6, 10, 13, 16, 18, 23, 25, 27,
-      10, 11, 16, 18, 23, 25, 27, 29,
-      13, 16, 18, 23, 25, 27, 29, 31,
-      16, 18, 23, 25, 27, 29, 31, 33,
-      18, 23, 25, 27, 29, 31, 33, 36,
-      23, 25, 27, 29, 31, 33, 36, 38,
-      25, 27, 29, 31, 33, 36, 38, 40,
-      27, 29, 31, 33, 36, 38, 40, 42 },
-    {  9, 13, 15, 17, 19, 21, 22, 24,
-      13, 13, 17, 19, 21, 22, 24, 25,
-      15, 17, 19, 21, 22, 24, 25, 27,
-      17, 19, 21, 22, 24, 25, 27, 28,
-      19, 21, 22, 24, 25, 27, 28, 30,
-      21, 22, 24, 25, 27, 28, 30, 32,
-      22, 24, 25, 27, 28, 30, 32, 33,
-      24, 25, 27, 28, 30, 32, 33, 35 }
-};
-
 static const uint8_t zigzag_scan[16] =
 {
     0 + 0 * 4, 1 + 0 * 4, 0 + 1 * 4, 0 + 2 * 4,
@@ -126,7 +98,7 @@ static inline void parse_scaling_list(istream_be& s, uint8_t (&coeffs)[N], const
             next = (last + delta_scale) & 0xff;
         }
         if (!i && !next) {
-            /* list is not transmited, we use the one passed by 'presets' */
+            /* list is not transmited, we use the one passed by 'defaults' */
             memcpy(coeffs, defaults, N * sizeof(uint8_t));
             break;
         }
@@ -246,7 +218,7 @@ int parser_h264::find_nal_unit()
     return &p[i] - s;
 }
 
-void parser_h264::parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (&lists)[SCALING_LIST_NUM], int list)
+void parser_h264::parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (&lists)[SL_4x4_NUM], int list)
 {
     do {
         h264::scaling_list_4x4& sl = lists[list];
@@ -257,7 +229,7 @@ void parser_h264::parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (
         }
 
         if (sl.scaling_list_present_flag)
-            parse_scaling_list(s, sl.scaling_list, default_scaling_matrices_4x4[list/3]);
+            parse_scaling_list(s, sl.scaling_list, h264::scaling_list_default_4x4[list/3]);
 
         if (s.status() != ISTREAM_STATUS_OK)
             break;
@@ -266,7 +238,7 @@ void parser_h264::parse_scaling_list_4x4(istream_be& s, h264::scaling_list_4x4 (
     } while (0);
 }
 
-void parser_h264::parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (&lists)[SCALING_LIST_NUM], int list)
+void parser_h264::parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (&lists)[SL_8x8_NUM], int list)
 {
     do {
         h264::scaling_list_8x8& sl = lists[list];
@@ -277,7 +249,7 @@ void parser_h264::parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (
         }
 
         if (sl.scaling_list_present_flag)
-            parse_scaling_list(s, sl.scaling_list, default_scaling_matrices_8x8[list/3]);
+            parse_scaling_list(s, sl.scaling_list, h264::scaling_list_default_8x8[list/3]);
 
         if (s.status() != ISTREAM_STATUS_OK)
             break;
@@ -289,27 +261,27 @@ void parser_h264::parse_scaling_list_8x8(istream_be& s, h264::scaling_list_8x8 (
 void parser_h264::parse_scaling_matrices_4x4(istream_be& s, h264::scaling_matrices& sm)
 {
     do {
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTRA_Y);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTRA_Y);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTRA_Cb);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTRA_Cb);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTRA_Cr);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTRA_Cr);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTER_Y);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTER_Y);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTER_Cb);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTER_Cb);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
-        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SCALING_LIST_INTER_Cr);
+        parse_scaling_list_4x4(s, sm.scaling_matrices_4x4, SL_4x4_INTER_Cr);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
     } while (0);
@@ -318,30 +290,28 @@ void parser_h264::parse_scaling_matrices_4x4(istream_be& s, h264::scaling_matric
 void parser_h264::parse_scaling_matrices_8x8(istream_be& s, h264::scaling_matrices& sm, uint32_t chroma_format_idc)
 {
     do {
-        parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTRA_Y);
+        parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTRA_Y);
+        if (s.status() != ISTREAM_STATUS_OK)
+            break;
+
+        parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTER_Y);
         if (s.status() != ISTREAM_STATUS_OK)
             break;
 
         if (3 == chroma_format_idc) {
-            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTRA_Cb);
+            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTRA_Cb);
             if (s.status() != ISTREAM_STATUS_OK)
                 break;
 
-            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTRA_Cr);
-            if (s.status() != ISTREAM_STATUS_OK)
-                break;
-        }
-
-        parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTER_Y);
-        if (s.status() != ISTREAM_STATUS_OK)
-            break;
-
-        if (3 == chroma_format_idc) {
-            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTER_Cb);
+            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTER_Cb);
             if (s.status() != ISTREAM_STATUS_OK)
                 break;
 
-            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SCALING_LIST_INTER_Cr);
+            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTRA_Cr);
+            if (s.status() != ISTREAM_STATUS_OK)
+                break;
+
+            parse_scaling_list_8x8(s, sm.scaling_matrices_8x8, SL_8x8_INTER_Cr);
             if (s.status() != ISTREAM_STATUS_OK)
                 break;
         }
