@@ -70,6 +70,12 @@ enum class ringbuffer_role
     CONSUMER,
 };
 
+enum class ringbuffer_xfer_semantic
+{
+    COPY,
+    MOVE,
+};
+
 template<typename T>
 class ringbuffer
 {
@@ -77,12 +83,12 @@ public:
     typedef T value_type;
 
     explicit ringbuffer(std::size_t capacity, bool non_blocking = false) :
-        m_capacity(capacity),
-        m_non_blocking(non_blocking),
-        m_counters(),
-        m_buffer(nullptr),
-        m_writing_semaphore(true),
-        m_reading_semaphore(false)
+        m_capacity{capacity},
+        m_non_blocking{non_blocking},
+        m_counters{},
+        m_buffer{nullptr},
+        m_writing_semaphore{true},
+        m_reading_semaphore{false}
     {
         assert(capacity > 0);
         assert(capacity < LONG_MAX);
@@ -182,7 +188,86 @@ public:
         return to_string();
     }
 
-    long write(const T data[], std::size_t count)
+    /*===========================================================================*\
+     * write family
+    \*===========================================================================*/
+    long write(const T* data, std::size_t count)
+    {
+        return write(data, count, copy<T>);
+    }
+
+    long write(T* data, std::size_t count)
+    {
+        return write(data, count, move<T>);
+    }
+
+    long write(const T& data)
+    {
+        return write(&data, 1, copy<T>);
+    }
+
+    long write(T&& data)
+    {
+        return write(&data, 1, move<T>);
+    }
+
+    template<std::size_t N>
+    long write(const T (&data)[N])
+    {
+        return write(data, N, copy<T>);
+    }
+
+    template<std::size_t N>
+    long write(T (&&data)[N])
+    {
+        return write(data, N, move<T>);
+    }
+
+    /*===========================================================================*\
+     * read family
+    \*===========================================================================*/
+    long read(T* data, std::size_t count, ringbuffer_xfer_semantic semantic = ringbuffer_xfer_semantic::COPY)
+    {
+        if (semantic == ringbuffer_xfer_semantic::COPY)
+            return read(data, 1, copy<T>);
+        else
+            return read(data, 1, move<T>);
+    }
+
+    long read(T& data, ringbuffer_xfer_semantic semantic = ringbuffer_xfer_semantic::COPY)
+    {
+        if (semantic == ringbuffer_xfer_semantic::COPY)
+            return read(&data, 1, copy<T>);
+        else
+            return read(&data, 1, move<T>);
+    }
+
+    template<std::size_t N>
+    long read(T (&data)[N], ringbuffer_xfer_semantic semantic = ringbuffer_xfer_semantic::COPY)
+    {
+        if (semantic == ringbuffer_xfer_semantic::COPY)
+            return read(data, N, copy<T>);
+        else
+            return read(data, N, move<T>);
+    }
+
+private:
+    template<typename U>
+    static void copy(U* dst, const U* src, std::size_t count)
+    {
+        while (count-- > 0)
+            *dst++ = *src++;
+    }
+
+    template<typename U>
+    static void move(U* dst, U* src, std::size_t count)
+    {
+        while (count-- > 0)
+            *dst++ = std::move(*src++);
+    }
+
+    template<typename DST, typename SRC>
+    long write(SRC data, std::size_t count, void (*xfer)(DST, SRC, std::size_t))
     {
         std::size_t produced;
         std::size_t consumed;
@@ -228,14 +313,14 @@ public:
         remaining = count;
 
         if (split > 0) {
-            memcpy(m_buffer + write_idx, data, split * sizeof(T));
+            xfer(m_buffer + write_idx, data, split);
 
             data += split;
             remaining -= split;
             write_idx = 0;
         }
 
-        memcpy(m_buffer + write_idx, data, remaining * sizeof(T));
+        xfer(m_buffer + write_idx, data, remaining);
         m_counters.m_produced.store(produced + count, std::memory_order_relaxed);
 
         if (!m_non_blocking)
@@ -244,18 +329,8 @@ public:
         return count;
     }
 
-    long write(const T& data)
-    {
-        return write(&data, 1);
-    }
-
-    template<std::size_t N>
-    long write(const T (&data)[N])
-    {
-        return write(data, N);
-    }
-
-    long read(T data[], std::size_t count)
+    template<typename DST, typename SRC>
+    long read(DST data, std::size_t count, void (*xfer)(DST, SRC, std::size_t))
     {
         std::size_t produced;
         std::size_t consumed;
@@ -300,14 +375,14 @@ public:
         remaining = count;
 
         if (split > 0) {
-            memcpy(data, m_buffer + read_idx, split * sizeof(T));
+            xfer(data, m_buffer + read_idx, split);
 
             data += split;
             remaining -= split;
             read_idx = 0;
         }
 
-        memcpy(data, m_buffer + read_idx, remaining * sizeof(T));
+        xfer(data, m_buffer + read_idx, remaining);
         m_counters.m_consumed.store(consumed + count, std::memory_order_relaxed);
 
         if (!m_non_blocking)
@@ -316,18 +391,6 @@ public:
         return count;
     }
 
-    long read(T& data)
-    {
-        return read(&data, 1);
-    }
-
-    template<std::size_t N>
-    long read(T (&data)[N])
-    {
-        return read(data, N);
-    }
-
-private:
     struct alignas(CACHELINE_SIZE) counters
     {
         explicit counters()
