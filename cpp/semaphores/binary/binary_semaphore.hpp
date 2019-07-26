@@ -44,9 +44,9 @@ class binary_semaphore
 {
 public:
     explicit binary_semaphore(bool ready = false) :
-       m_mutex(),
-       m_condvar(),
-       m_ready(ready)
+       m_mutex{},
+       m_condvar{},
+       m_ready{ready}
     {
     }
 

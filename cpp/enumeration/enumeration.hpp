@@ -55,7 +55,7 @@ class enumeration
     static_assert(std::is_enum<T>::value, "T is not an enumeration type");
 public:
     constexpr enumeration(const T& value) :
-        m_value(value)
+        m_value{value}
     {
 #if defined(DEBUG_ENUMERATION)
         std::cout << __PRETTY_FUNCTION__ << std::endl;

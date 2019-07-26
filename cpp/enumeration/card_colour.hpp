@@ -56,7 +56,7 @@ class card_colour : public enumeration<card_colour_e>
 {
 public:
     constexpr card_colour(const card_colour_e& e) :
-        enumeration<card_colour_e>(e)
+        enumeration<card_colour_e>{e}
     {
 #if defined(DEBUG_ENUMERATION)
         std::cout << __PRETTY_FUNCTION__ << std::endl;

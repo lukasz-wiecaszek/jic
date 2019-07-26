@@ -42,7 +42,7 @@ class h264_structure
 {
 public:
     explicit h264_structure() :
-        m_valid(false)
+        m_valid{false}
     {
     }
 

@@ -48,7 +48,7 @@ class mpeg2ts_pid
 {
 public:
     mpeg2ts_pid(int pid = MPEG2TS_PID_INVALID) :
-        m_pid(pid)
+        m_pid{pid}
     {
     }
 

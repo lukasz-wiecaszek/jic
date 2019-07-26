@@ -112,7 +112,7 @@ public:
     /* Constructs a shared_ptr with no managed object, i.e. epmty shared_ptr */
 
     constexpr shared_ptr() :
-        m_ptr(nullptr)
+        m_ptr{nullptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -120,7 +120,7 @@ public:
     }
 
     constexpr shared_ptr(std::nullptr_t) :
-        m_ptr(nullptr)
+        m_ptr{nullptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -130,7 +130,7 @@ public:
     /* Constructs a shared_ptr from a T derived types */
 
     shared_ptr(T* ptr) :
-        m_ptr(ptr)
+        m_ptr{ptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -139,7 +139,7 @@ public:
 
     template<typename D>
     shared_ptr(T* ptr, D deleter) :
-        m_ptr(ptr)
+        m_ptr{ptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -149,7 +149,7 @@ public:
     }
 
     shared_ptr(const shared_ptr<T>& other) :
-        m_ptr(other.m_ptr)
+        m_ptr{other.m_ptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -159,7 +159,7 @@ public:
     }
 
     shared_ptr(shared_ptr<T>&& other) :
-        m_ptr(other.m_ptr)
+        m_ptr{other.m_ptr}
     {
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -171,7 +171,7 @@ public:
 
     template<typename U>
     shared_ptr(U* ptr) :
-        m_ptr(ptr)
+        m_ptr{ptr}
     {
         static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)
@@ -181,7 +181,7 @@ public:
 
     template<typename U, typename D>
     shared_ptr(U* ptr, D deleter) :
-        m_ptr(ptr)
+        m_ptr{ptr}
     {
         static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)
@@ -193,7 +193,7 @@ public:
 
     template<typename U>
     shared_ptr(const shared_ptr<U>& other) :
-       m_ptr(other.m_ptr)
+       m_ptr{other.m_ptr}
     {
         static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)
@@ -205,7 +205,7 @@ public:
 
     template<typename U>
     shared_ptr(shared_ptr<U>&& other) :
-       m_ptr(other.m_ptr)
+       m_ptr{other.m_ptr}
     {
         static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)

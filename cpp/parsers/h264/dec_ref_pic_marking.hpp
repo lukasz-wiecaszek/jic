@@ -49,7 +49,7 @@ namespace h264
 struct dec_ref_pic_marking_idr : public h264_structure
 {
     dec_ref_pic_marking_idr() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

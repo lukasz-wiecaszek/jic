@@ -53,8 +53,8 @@ public:
     typedef T value_type;
 
     explicit parser_base(std::size_t capacity) :
-        m_flatbuffer(capacity),
-        m_user_data(nullptr)
+        m_flatbuffer{capacity},
+        m_user_data{nullptr}
     {
 #if defined(DEBUG)
         std::cout << __PRETTY_FUNCTION__ << std::endl;

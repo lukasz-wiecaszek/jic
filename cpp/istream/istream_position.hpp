@@ -46,8 +46,8 @@ namespace ymn
 struct istream_position
 {
     constexpr explicit istream_position(std::size_t byte_position = 0, std::size_t bit_position = 0) :
-        m_byte_position(byte_position),
-        m_bit_position(bit_position)
+        m_byte_position{byte_position},
+        m_bit_position{bit_position}
     {
     }
 

@@ -51,7 +51,7 @@ namespace h264
 struct pps : public h264_structure
 {
     pps() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

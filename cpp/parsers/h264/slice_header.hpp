@@ -52,7 +52,7 @@ namespace h264
 struct slice_header : public h264_structure
 {
     slice_header() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

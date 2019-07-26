@@ -95,11 +95,11 @@ class istream
                   "unknown cpu endiannes");
 public:
     explicit istream(const uint8_t* buffer, std::size_t size, const istream_error_function& function = nullptr) :
-        m_buffer(buffer),
-        m_size(size),
-        m_position(),
-        m_status(ISTREAM_STATUS_OK),
-        m_error_function(function)
+        m_buffer{buffer},
+        m_size{size},
+        m_position{},
+        m_status{ISTREAM_STATUS_OK},
+        m_error_function{function}
     {
 #if defined(DEBUG_ISTREAM)
         std::cout << __PRETTY_FUNCTION__ << std::endl;

@@ -55,9 +55,9 @@ public:
     typedef T value_type;
 
     explicit flatbuffer(std::size_t capacity) :
-        m_capacity(capacity),
-        m_counters(capacity),
-        m_buffer(nullptr)
+        m_capacity{capacity},
+        m_counters{capacity},
+        m_buffer{nullptr}
     {
         m_buffer = new T[m_capacity];
 

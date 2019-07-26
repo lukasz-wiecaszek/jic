@@ -52,12 +52,12 @@ class class_a :
 {
 public:
     class_a(T member1, T member2, T member3) :
-        class_b1(),
-        class_b2(),
-        class_b3(),
-        m_member1(member1),
-        m_member2(member2),
-        m_member3(member3)
+        class_b1{},
+        class_b2{},
+        class_b3{},
+        m_member1{member1},
+        m_member2{member2},
+        m_member3{member3}
     {
     }
 

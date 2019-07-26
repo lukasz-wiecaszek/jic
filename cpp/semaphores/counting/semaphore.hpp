@@ -44,9 +44,9 @@ class semaphore
 {
 public:
     explicit semaphore(std::size_t count = 0) :
-       m_mutex(),
-       m_condvar(),
-       m_count(count)
+       m_mutex{},
+       m_condvar{},
+       m_count{count}
     {
     }
 

@@ -56,8 +56,8 @@ public:
     typedef std::tuple<Args...> arguments;
 
     work(const function& func, Args... args) :
-       m_function(func),
-       m_args(args...)
+       m_function{func},
+       m_args{args...}
     {
     }
 

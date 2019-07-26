@@ -52,11 +52,11 @@ class workqueue
 {
 public:
     explicit workqueue(const std::string& idstr, std::size_t threads = 1) :
-        m_idstring(idstr),
-        m_threads(threads),
-        m_queue(),
-        m_worker_threads(nullptr),
-        m_is_valid(false)
+        m_idstring{idstr},
+        m_threads{threads},
+        m_queue{},
+        m_worker_threads{nullptr},
+        m_is_valid{false}
     {
         std::size_t created_workers = 0;
 
@@ -197,7 +197,7 @@ private:
 
     private:
         std::mutex m_mutex; // protects access to m_queue
-        ymn::semaphore m_semaphore; // blocks threads trying to fetch from empty queue
+        semaphore m_semaphore; // blocks threads trying to fetch from empty queue
         std::queue<work_base_sptr> m_fifo;
     };
 

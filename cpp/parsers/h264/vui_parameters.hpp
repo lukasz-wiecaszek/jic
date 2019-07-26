@@ -50,7 +50,7 @@ namespace h264
 struct vui_parameters : public h264_structure
 {
     vui_parameters() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

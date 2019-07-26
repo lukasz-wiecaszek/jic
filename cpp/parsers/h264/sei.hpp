@@ -47,7 +47,7 @@ namespace h264
 struct sei : public h264_structure
 {
     sei() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

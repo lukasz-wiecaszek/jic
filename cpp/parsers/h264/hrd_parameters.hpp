@@ -46,7 +46,7 @@ namespace h264
 struct hrd_parameters : public h264_structure
 {
     hrd_parameters() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

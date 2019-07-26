@@ -50,7 +50,7 @@ namespace h264
 struct sps : public h264_structure
 {
     sps() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

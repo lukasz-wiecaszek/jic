@@ -62,7 +62,7 @@ namespace h264
 struct scaling_list_4x4 : public h264_structure
 {
     scaling_list_4x4() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

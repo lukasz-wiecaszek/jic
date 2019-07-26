@@ -72,10 +72,10 @@ class parser_mpeg2ts : public parser_base<uint8_t>
 {
 public:
     explicit parser_mpeg2ts(std::size_t capacity) :
-        parser_base<uint8_t>(capacity),
-        m_state_function(&parser_mpeg2ts::waiting_for_sync),
-        m_tspacket_size(0),
-        m_transport_rate()
+        parser_base<uint8_t>{capacity},
+        m_state_function{&parser_mpeg2ts::waiting_for_sync},
+        m_tspacket_size{0},
+        m_transport_rate{}
     {
 #if defined(DEBUG_PARSERS)
         std::cout << __PRETTY_FUNCTION__ << std::endl;

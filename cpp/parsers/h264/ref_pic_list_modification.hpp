@@ -48,7 +48,7 @@ namespace h264
 struct ref_pic_list_modification : public h264_structure
 {
     ref_pic_list_modification() :
-        h264_structure()
+        h264_structure{}
     {
     }
 

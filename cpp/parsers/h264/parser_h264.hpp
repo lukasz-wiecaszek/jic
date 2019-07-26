@@ -107,15 +107,15 @@ class parser_h264 : public parser_base<uint8_t>
 {
 public:
     explicit parser_h264(std::size_t capacity, parser_h264_container_e container) :
-        parser_base<uint8_t>(capacity),
-        m_parse_function(nullptr),
-        m_aud(),
-        m_sps_table(),
-        m_recent_sps(-1),
-        m_pps_table(),
-        m_recent_pps(-1),
-        m_sei(),
-        m_slice_header()
+        parser_base<uint8_t>{capacity},
+        m_parse_function{nullptr},
+        m_aud{},
+        m_sps_table{},
+        m_recent_sps{-1},
+        m_pps_table{},
+        m_recent_pps{-1},
+        m_sei{},
+        m_slice_header{}
     {
         switch (container) {
             case parser_h264_container_e::NONE:

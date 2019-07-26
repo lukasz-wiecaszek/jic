@@ -59,8 +59,8 @@ class listeners
 
 public:
    listeners() :
-      m_mutex(),
-      m_listeners()
+      m_mutex{},
+      m_listeners{}
    {
    }
 

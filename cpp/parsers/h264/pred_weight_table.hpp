@@ -48,7 +48,7 @@ namespace h264
 struct pred_weight_table : public h264_structure
 {
     pred_weight_table() :
-        h264_structure()
+        h264_structure{}
     {
     }
 
