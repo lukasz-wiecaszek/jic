@@ -25,6 +25,7 @@
 #include <atomic>
 #include <string>
 #include <sstream>
+#include <functional>
 #include <mutex>
 #include <condition_variable>
 
@@ -44,6 +45,7 @@
  * project header files
 \*===========================================================================*/
 #include "../../utils/power_of_two.hpp"
+#include "../../utils/utilities.hpp"
 #include "../../semaphores/binary/binary_semaphore.hpp"
 
 /*===========================================================================*\
@@ -223,6 +225,11 @@ public:
         return write(data, N, move<T>);
     }
 
+    long write(std::function<bool(T*)> producer, std::size_t count)
+    {
+        return write(functor<T>(producer), count, xfer_producer<T>);
+    }
+
     /*===========================================================================*\
      * read family
     \*===========================================================================*/
@@ -251,23 +258,79 @@ public:
             return read(data, N, move<T>);
     }
 
+    long read(std::function<bool(T*)> consumer, std::size_t count)
+    {
+        return read(functor<T>(consumer), count, xfer_consumer<T>);
+    }
+
 private:
     template<typename U>
-    static void copy(U* dst, const U* src, std::size_t count)
+    static bool copy(U* dst, const U* src, std::size_t count)
     {
         while (count-- > 0)
             *dst++ = *src++;
+
+        return true;
     }
 
     template<typename U>
-    static void move(U* dst, U* src, std::size_t count)
+    static bool move(U* dst, U* src, std::size_t count)
     {
         while (count-- > 0)
             *dst++ = std::move(*src++);
+
+        return true;
+    }
+
+    template<typename U>
+    struct functor
+    {
+        functor(std::function<bool(U*)> f) :
+            m_function{f}
+        {
+        }
+
+        bool operator()(U* arg)
+        {
+            return m_function(arg);
+        }
+
+        /* This operator does nothing but is needed to fullfil contract
+        needed in template write and read functions. */
+        void operator += (std::size_t count)
+        {
+            UNUSED(count);
+        }
+
+        std::function<bool(U*)> m_function;
+    };
+
+    template<typename U>
+    static bool xfer_producer(U* dst, functor<U> src, std::size_t count)
+    {
+        bool status = true;
+
+        while (count-- > 0)
+            if (false == (status = src(dst++)))
+                break;
+
+        return status;
+    }
+
+    template<typename U>
+    static bool xfer_consumer(functor<U> dst, U* src, std::size_t count)
+    {
+        bool status = true;
+
+        while (count-- > 0)
+            if (false == (status = dst(src++)))
+                break;
+
+        return status;
     }
 
     template<typename DST, typename SRC>
-    long write(SRC data, std::size_t count, void (*xfer)(DST, SRC, std::size_t))
+    long write(SRC data, std::size_t count, bool (*xfer)(DST, SRC, std::size_t))
     {
         std::size_t produced;
         std::size_t consumed;
@@ -313,14 +376,17 @@ private:
         remaining = count;
 
         if (split > 0) {
-            xfer(m_buffer + write_idx, data, split);
+            if (false == xfer(m_buffer + write_idx, data, split))
+                return static_cast<long>(ringbuffer_status::INTERNAL_ERROR);
 
             data += split;
             remaining -= split;
             write_idx = 0;
         }
 
-        xfer(m_buffer + write_idx, data, remaining);
+        if (false == xfer(m_buffer + write_idx, data, remaining))
+            return static_cast<long>(ringbuffer_status::INTERNAL_ERROR);
+
         m_counters.m_produced.store(produced + count, std::memory_order_relaxed);
 
         if (!m_non_blocking)
@@ -330,7 +396,7 @@ private:
     }
 
     template<typename DST, typename SRC>
-    long read(DST data, std::size_t count, void (*xfer)(DST, SRC, std::size_t))
+    long read(DST data, std::size_t count, bool (*xfer)(DST, SRC, std::size_t))
     {
         std::size_t produced;
         std::size_t consumed;
@@ -375,14 +441,17 @@ private:
         remaining = count;
 
         if (split > 0) {
-            xfer(data, m_buffer + read_idx, split);
+            if (false == xfer(data, m_buffer + read_idx, split))
+                return static_cast<long>(ringbuffer_status::INTERNAL_ERROR);
 
             data += split;
             remaining -= split;
             read_idx = 0;
         }
 
-        xfer(data, m_buffer + read_idx, remaining);
+        if (false == xfer(data, m_buffer + read_idx, remaining))
+            return static_cast<long>(ringbuffer_status::INTERNAL_ERROR);
+
         m_counters.m_consumed.store(consumed + count, std::memory_order_relaxed);
 
         if (!m_non_blocking)

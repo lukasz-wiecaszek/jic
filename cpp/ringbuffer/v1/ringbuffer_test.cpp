@@ -26,6 +26,7 @@
  * project header files
 \*===========================================================================*/
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "ringbuffer.hpp"
 
 /*===========================================================================*\
@@ -42,11 +43,134 @@ takes the constant expression branch. */
 
 #define ITERATIONS 1000
 
+#define TEST_1IN_1OUT(TYPE, CAPACITY, BLOCKING_MODE)                                         \
+TEST(ringbuffer, 1in_1out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLOCKING_MODE)  \
+{                                                                                            \
+    {                                                                                        \
+        ymn::ringbuffer<TYPE, CAPACITY, BLOCKING_MODE> rb;                                   \
+                                                                                             \
+        std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};                \
+        std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};                \
+                                                                                             \
+        producer.join();                                                                     \
+        consumer.join();                                                                     \
+                                                                                             \
+        std::cout << static_cast<std::string>(rb) << std::endl;                              \
+    }                                                                                        \
+    {                                                                                        \
+        ymn::ringbuffer<TYPE, CAPACITY, BLOCKING_MODE> rb;                                   \
+                                                                                             \
+        std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};            \
+        std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};            \
+                                                                                             \
+        producer.join();                                                                     \
+        consumer.join();                                                                     \
+                                                                                             \
+        std::cout << static_cast<std::string>(rb) << std::endl;                              \
+    }                                                                                        \
+    {                                                                                        \
+        ymn::ringbuffer<TYPE, CAPACITY, BLOCKING_MODE> rb;                                   \
+                                                                                             \
+        std::thread producer {producer_function<decltype(rb), 1>, std::ref(rb)};             \
+        std::thread consumer {consumer_function<decltype(rb), 1>, std::ref(rb)};             \
+                                                                                             \
+        producer.join();                                                                     \
+        consumer.join();                                                                     \
+                                                                                             \
+        std::cout << static_cast<std::string>(rb) << std::endl;                              \
+    }                                                                                        \
+}
+
+#define TEST_7IN_11OUT(TYPE, CAPACITY, BLOCKING_MODE)                                        \
+TEST(ringbuffer, 7in_11out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLOCKING_MODE) \
+{                                                                                            \
+    {                                                                                        \
+        ymn::ringbuffer<TYPE, CAPACITY, BLOCKING_MODE> rb;                                   \
+                                                                                             \
+        std::thread producer {producer_Nelements<decltype(rb),  7>, std::ref(rb)};           \
+        std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};           \
+                                                                                             \
+        producer.join();                                                                     \
+        consumer.join();                                                                     \
+                                                                                             \
+        std::cout << static_cast<std::string>(rb) << std::endl;                              \
+    }                                                                                        \
+    {                                                                                        \
+        ymn::ringbuffer<TYPE, CAPACITY, BLOCKING_MODE> rb;                                   \
+                                                                                             \
+        std::thread producer {producer_function<decltype(rb),  7>, std::ref(rb)};            \
+        std::thread consumer {consumer_function<decltype(rb), 11>, std::ref(rb)};            \
+                                                                                             \
+        producer.join();                                                                     \
+        consumer.join();                                                                     \
+                                                                                             \
+        std::cout << static_cast<std::string>(rb) << std::endl;                              \
+    }                                                                                        \
+}
+
 /*===========================================================================*\
  * local type definitions
 \*===========================================================================*/
 namespace
 {
+
+struct rb_element
+{
+    rb_element() :
+        m_value(-1)
+    {
+    }
+
+    rb_element(long value) :
+        m_value{value}
+    {
+    }
+
+    ~rb_element()
+    {
+    }
+
+    rb_element(const rb_element& other)
+    {
+        m_value = other.m_value;
+    }
+
+    rb_element(rb_element&& other)
+    {
+        m_value = other.m_value;
+    }
+
+    rb_element& operator = (const rb_element& other)
+    {
+        m_value = other.m_value;
+        return *this;
+    }
+
+    rb_element& operator = (rb_element&& other)
+    {
+        m_value = other.m_value;
+        return *this;
+    }
+
+    bool operator == (const rb_element& other) const
+    {
+        return m_value == other.m_value;
+    }
+
+    bool operator != (const rb_element& other) const
+    {
+        return m_value != other.m_value;
+    }
+
+    friend std::string to_string(const rb_element& e);
+
+    long m_value;
+};
+
+inline std::string to_string(const rb_element& e)
+{
+    return to_string(e.m_value);
+}
 
 } // end of anonymous namespace
 
@@ -59,8 +183,10 @@ namespace
 \*===========================================================================*/
 template<typename RB> static void producer_1element(RB& rb);
 template<typename RB> static void consumer_1element(RB& rb);
-template<typename RB, std::size_t N> static void producer_Nelements(RB& rb);
-template<typename RB, std::size_t N> static void consumer_Nelements(RB& rb);
+template<typename RB, size_t N> static void producer_Nelements(RB& rb);
+template<typename RB, size_t N> static void consumer_Nelements(RB& rb);
+template<typename RB, size_t N> static void producer_function(RB& rb);
+template<typename RB, size_t N> static void consumer_function(RB& rb);
 
 /*===========================================================================*\
  * local object definitions
@@ -77,11 +203,11 @@ static std::mutex mutex;
 namespace
 {
 
-TEST(ringbuffer, create_on_stack)
+TEST(ringbuffer, create_on_stack_primitive_type)
 {
-    const std::size_t capacity = 1;
-    ymn::ringbuffer<std::size_t, capacity, true> rb1;
-    ymn::ringbuffer<std::size_t, capacity, false> rb2;
+    const size_t capacity = 1;
+    ymn::ringbuffer<size_t, capacity, true> rb1;
+    ymn::ringbuffer<size_t, capacity, false> rb2;
 
     EXPECT_EQ(capacity, rb1.capacity());
     EXPECT_EQ(capacity, rb2.capacity());
@@ -93,14 +219,53 @@ TEST(ringbuffer, create_on_stack)
     std::cout << static_cast<std::string>(rb2) << std::endl;
 }
 
-TEST(ringbuffer, create_on_heap)
+TEST(ringbuffer, create_on_stack_class_type)
 {
-    const std::size_t capacity = 1;
+    const size_t capacity = 1;
 
-    ymn::ringbuffer<std::size_t, capacity, true> *rb1 =
-        new ymn::ringbuffer<std::size_t, capacity, true>;
-    ymn::ringbuffer<std::size_t, capacity, false> *rb2 =
-        new ymn::ringbuffer<std::size_t, capacity, false>;
+    ymn::ringbuffer<rb_element, capacity, true> rb1;
+    ymn::ringbuffer<rb_element, capacity, false> rb2;
+
+    EXPECT_EQ(capacity, rb1.capacity());
+    EXPECT_EQ(capacity, rb2.capacity());
+
+    EXPECT_EQ(true, rb1.non_blocking());
+    EXPECT_EQ(false, rb2.non_blocking());
+
+    std::cout << static_cast<std::string>(rb1) << std::endl;
+    std::cout << static_cast<std::string>(rb2) << std::endl;
+}
+
+TEST(ringbuffer, create_on_heap_primitive_type)
+{
+    const size_t capacity = 1;
+
+    ymn::ringbuffer<size_t, capacity, true> *rb1 =
+        new ymn::ringbuffer<size_t, capacity, true>;
+    ymn::ringbuffer<size_t, capacity, false> *rb2 =
+        new ymn::ringbuffer<size_t, capacity, false>;
+
+    EXPECT_EQ(capacity, rb1->capacity());
+    EXPECT_EQ(capacity, rb2->capacity());
+
+    EXPECT_EQ(true, rb1->non_blocking());
+    EXPECT_EQ(false, rb2->non_blocking());
+
+    std::cout << rb1->to_string() << std::endl;
+    std::cout << rb2->to_string() << std::endl;
+
+    delete rb1;
+    delete rb2;
+}
+
+TEST(ringbuffer, create_on_heap_class_type)
+{
+    const size_t capacity = 1;
+
+    ymn::ringbuffer<rb_element, capacity, true> *rb1 =
+        new ymn::ringbuffer<rb_element, capacity, true>;
+    ymn::ringbuffer<rb_element, capacity, false> *rb2 =
+        new ymn::ringbuffer<rb_element, capacity, false>;
 
     EXPECT_EQ(capacity, rb1->capacity());
     EXPECT_EQ(capacity, rb2->capacity());
@@ -118,216 +283,28 @@ TEST(ringbuffer, create_on_heap)
 /*===========================================================================*\
  * tests of blocking semantic of ringbuffer
 \*===========================================================================*/
-TEST(ringbuffer, capacity1_1in_1out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 1, false> rb;
+TEST_1IN_1OUT(size_t,  1, false)
+TEST_1IN_1OUT(size_t,  2, false)
+TEST_1IN_1OUT(size_t, 64, false)
+TEST_1IN_1OUT(size_t, 65, false)
 
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity2_1in_1out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 2, false> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_1in_1out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 64, false> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_1in_1out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 65, false> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_1in_1out_as_array_blocking)
-{
-    ymn::ringbuffer<std::size_t, 64, false> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_1in_1out_as_array_blocking)
-{
-    ymn::ringbuffer<std::size_t, 65, false> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_7in_11out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 64, false> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 7>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_7in_11out_blocking)
-{
-    ymn::ringbuffer<std::size_t, 65, false> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 7>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
+TEST_7IN_11OUT(rb_element,  1, false)
+TEST_7IN_11OUT(rb_element,  2, false)
+TEST_7IN_11OUT(rb_element, 64, false)
+TEST_7IN_11OUT(rb_element, 65, false)
 
 /*===========================================================================*\
  * tests of non-blocking semantic of ringbuffer
 \*===========================================================================*/
-TEST(ringbuffer, capacity1_1in_1out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 1, true> rb;
+TEST_1IN_1OUT(size_t,  1, true)
+TEST_1IN_1OUT(size_t,  2, true)
+TEST_1IN_1OUT(size_t, 64, true)
+TEST_1IN_1OUT(size_t, 65, true)
 
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity2_1in_1out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 2, true> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_1in_1out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 64, true> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_1in_1out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 65, true> rb;
-
-    std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};
-    std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_1in_1out_as_array_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 64, true> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_1in_1out_as_array_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 65, true> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity64_7in_11out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 64, true> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 7>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
-
-TEST(ringbuffer, capacity65_7in_11out_nonblocking)
-{
-    ymn::ringbuffer<std::size_t, 65, true> rb;
-
-    std::thread producer {producer_Nelements<decltype(rb), 7>, std::ref(rb)};
-    std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};
-
-    producer.join();
-    consumer.join();
-
-    std::cout << static_cast<std::string>(rb) << std::endl;
-}
+TEST_7IN_11OUT(rb_element,  1, true)
+TEST_7IN_11OUT(rb_element,  2, true)
+TEST_7IN_11OUT(rb_element, 64, true)
+TEST_7IN_11OUT(rb_element, 65, true)
 
 } // end of anonymous namespace
 
@@ -352,8 +329,8 @@ template<typename RB>
 static void producer_1element(RB& rb)
 {
     long status;
-    std::size_t produced;
-    std::size_t wouldblock_cnt;
+    size_t produced;
+    size_t wouldblock_cnt;
     typename RB::value_type element;
 
     produced = 0;
@@ -387,8 +364,8 @@ template<typename RB>
 static void consumer_1element(RB& rb)
 {
     long status;
-    std::size_t consumed;
-    std::size_t wouldblock_cnt;
+    size_t consumed;
+    size_t wouldblock_cnt;
     typename RB::value_type element;
 
     consumed = 0;
@@ -411,7 +388,7 @@ static void consumer_1element(RB& rb)
             break;
         }
         if (element != consumed) {
-            std::cout << "read element " << element << " does not match with consumed elements " << consumed << std::endl;
+            std::cout << "read element " << to_string(element) << " does not match with consumed elements " << consumed << std::endl;
             break;
         }
         consumed += status;
@@ -422,19 +399,19 @@ static void consumer_1element(RB& rb)
     mutex.unlock();
 }
 
-template<typename RB, std::size_t N>
+template<typename RB, size_t N>
 static void producer_Nelements(RB& rb)
 {
     long status;
-    std::size_t produced;
-    std::size_t wouldblock_cnt;
+    size_t produced;
+    size_t wouldblock_cnt;
     typename RB::value_type array[N];
 
     produced = 0;
     wouldblock_cnt = 0;
     while (produced < ITERATIONS) {
         memset(array, 0, sizeof(array));
-        for (std::size_t j = 0; j < (sizeof(array) / sizeof(array[0])); ++j)
+        for (size_t j = 0; j < (sizeof(array) / sizeof(array[0])); ++j)
             array[j] = produced + j;
         status = rb.write(array);
         if (status < 0) {
@@ -455,12 +432,12 @@ static void producer_Nelements(RB& rb)
     mutex.unlock();
 }
 
-template<typename RB, std::size_t N>
+template<typename RB, size_t N>
 static void consumer_Nelements(RB& rb)
 {
     long status;
-    std::size_t consumed;
-    std::size_t wouldblock_cnt;
+    size_t consumed;
+    size_t wouldblock_cnt;
     typename RB::value_type array[N];
 
     consumed = 0;
@@ -485,6 +462,72 @@ static void consumer_Nelements(RB& rb)
             }
         }
         consumed += status;
+        //std::cout << "rb.read() returned " << status << " consumed " << consumed << std::endl;
+    }
+    mutex.lock();
+    std::cout << "consumed: " << consumed << " wouldblock_cnt: " << wouldblock_cnt << std::endl;
+    mutex.unlock();
+}
+
+template<typename RB, size_t N>
+static void producer_function(RB& rb)
+{
+    long status;
+    size_t produced;
+    size_t wouldblock_cnt;
+
+    produced = 0;
+    wouldblock_cnt = 0;
+    while (produced < ITERATIONS) {
+        status = rb.write([&produced](typename RB::value_type *dst) -> bool {
+            *dst = produced++;
+            return true;
+        }, N);
+        if (status < 0) {
+            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+                wouldblock_cnt++;
+                continue;
+            }
+            else {
+                std::cout << "rb.write() failed with code " << status << std::endl;
+                break;
+            }
+        }
+        //std::cout << "rb.write() returned " << status << " produced " << produced << std::endl;
+    }
+    mutex.lock();
+    std::cout << "produced: " << produced << " wouldblock_cnt: " << wouldblock_cnt << std::endl;
+    mutex.unlock();
+}
+
+template<typename RB, size_t N>
+static void consumer_function(RB& rb)
+{
+    long status;
+    size_t consumed;
+    size_t wouldblock_cnt;
+
+    consumed = 0;
+    wouldblock_cnt = 0;
+    while (consumed < ITERATIONS) {
+        status = rb.read([&consumed](typename RB::value_type *src) -> bool {
+            if (*src == consumed++)
+                return true;
+            else {
+                std::cout << "error in order of elements" << std::endl;
+                return false;
+            }
+        }, N);
+        if (status < 0) {
+            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+                wouldblock_cnt++;
+                continue;
+            }
+            else {
+                std::cout << "rb.read() failed with code " << status << std::endl;
+                break;
+            }
+        }
         //std::cout << "rb.read() returned " << status << " consumed " << consumed << std::endl;
     }
     mutex.lock();
