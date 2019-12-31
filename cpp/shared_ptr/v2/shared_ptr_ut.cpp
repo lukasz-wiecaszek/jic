@@ -1,7 +1,7 @@
 /**
- * @file shared_ptr_test.cpp
+ * @file shared_ptr_ut.cpp
  *
- * Test procedures for 'shared_ptr' type.
+ * Unit tests (UT) for 'shared_ptr'.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
  *
@@ -25,13 +25,19 @@
  * project header files
 \*===========================================================================*/
 #include "gtest/gtest.h"
-#include "shared_ptr.hpp"
 
 /*===========================================================================*\
  * 'using namespace' section
 \*===========================================================================*/
+//#define USE_STD_SHARED_PTR
+
+#if !defined(USE_STD_SHARED_PTR)
+#include "shared_ptr.hpp"
 using namespace ymn;
-//using namespace std;
+#else
+#include <memory>
+using namespace std;
+#endif
 
 /*===========================================================================*\
  * preprocessor #define constants and macros
@@ -52,11 +58,15 @@ struct base : public ref_base<base>
     base(int id) :
         m_id(id)
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
     virtual ~base()
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
     int id() const
     {
@@ -72,11 +82,15 @@ struct derived : public base
     derived(int id) :
         base(id)
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
     virtual ~derived()
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
 };
 
@@ -84,12 +98,16 @@ struct deleter
 {
     deleter()
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
 
     void operator () (struct base* b)
     {
+#if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
         delete b;
     }
 };
@@ -121,19 +139,6 @@ namespace
 #include "constructors.test"
 #include "copy_assigments.test"
 
-
-
-
-
-
-
-
-
-
-
-
-#if 0
-
 TEST(shared_ptr, reset_1)
 {
     shared_ptr<derived> sptr1(new derived(1));
@@ -152,9 +157,6 @@ TEST(shared_ptr, reset_1)
 
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
-
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
 }
 
 TEST(shared_ptr, reset_2)
@@ -175,9 +177,6 @@ TEST(shared_ptr, reset_2)
 
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
-
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
 }
 
 TEST(shared_ptr, reset_3)
@@ -198,171 +197,166 @@ TEST(shared_ptr, reset_3)
 
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
-
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
 }
 
 TEST(shared_ptr, swap_1)
 {
-    shared_ptr<base> sptr1(new derived(1));
+    const int id1 = 1;
+    shared_ptr<base> sptr1(new derived(id1));
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
+    EXPECT_EQ(id1, sptr1->id());
 
     sptr1.swap(sptr1);
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
-
-    std::cout << (std::string)sptr1 << std::endl;
+    EXPECT_EQ(id1, sptr1->id());
 }
 
 TEST(shared_ptr, swap_2)
 {
-    shared_ptr<base> sptr1(new derived(1));
-    shared_ptr<base> sptr2(new derived(2));
+    const int id1 = 1;
+    shared_ptr<base> sptr1(new derived(id1));
+    const int id2 = 2;
+    shared_ptr<base> sptr2(new derived(id2));
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
+    EXPECT_EQ(id1, sptr1->id());
 
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
+    EXPECT_EQ(id2, sptr2->id());
 
     sptr1.swap(sptr2);
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
+    EXPECT_EQ(id2, sptr1->id());
 
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
-
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
+    EXPECT_EQ(id1, sptr2->id());
 }
 
 TEST(shared_ptr, dereference_1)
 {
-    shared_ptr<base> sptr1(new derived(1));
+    derived* ptr = new derived(1);
+    shared_ptr<base> sptr1(ptr);
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
 
-    base b = *sptr1;
-
-    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_EQ(ptr, sptr1.get());
     EXPECT_TRUE(sptr1);
-
-    std::cout << (std::string)sptr1 << std::endl;
 }
 
 TEST(shared_ptr, dereference_2)
 {
-    shared_ptr<base> sptr1(new derived(1));
+    derived* ptr = new derived(1);
+    shared_ptr<base> sptr1(ptr);
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
 
-    EXPECT_EQ(1, sptr1->id());
+    EXPECT_EQ(ptr, &(*sptr1));
+    EXPECT_TRUE(sptr1);
+}
+
+TEST(shared_ptr, dereference_3)
+{
+    derived* ptr = new derived(1);
+    shared_ptr<base> sptr1(ptr);
 
     EXPECT_EQ(1, sptr1.use_count());
     EXPECT_TRUE(sptr1);
 
-    std::cout << (std::string)sptr1 << std::endl;
+    EXPECT_EQ(ptr->id(), sptr1->id());
+    EXPECT_TRUE(sptr1);
 }
 
-TEST(shared_ptr, multithreaded_1)
+#if !defined(USE_STD_SHARED_PTR)
+
+TEST(shared_ptr, to_sting)
 {
-    const int counter = 3;
-    shared_ptr<base, std::atomic<int>> sptr(new derived(1));
+    shared_ptr<base> sptr;
 
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    EXPECT_EQ(1, sptr->id());
-
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
-
-    std::thread t1 {[sptr1 = sptr](){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    std::thread t2 {[sptr1 = sptr] (){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    std::thread t3 {[sptr1 = sptr] (){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    t1.join();
-    t2.join();
-	t3.join();
-
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
+    EXPECT_EQ(static_cast<std::string>(sptr), sptr.to_string());
 }
 
-TEST(shared_ptr, multithreaded_2)
-{
-    const int counter = 100;
-    shared_ptr<base, std::atomic<int>> sptr(new derived(1));
-
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    EXPECT_EQ(1, sptr->id());
-
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
-
-    std::thread t1 {[sptr1 = sptr](){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    std::thread t2 {[sptr1 = sptr] (){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    std::thread t3 {[sptr1 = sptr] (){
-        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
-            decltype(sptr1) sptr2(sptr1); /* copy constructor and then destructor */
-            std::cout << (std::string)sptr2 << std::endl;
-        }
-    }};
-
-    t1.join();
-    t2.join();
-	t3.join();
-
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
-}
 #endif
+
+TEST(shared_ptr, multithreaded)
+{
+    const int counter = 1000;
+
+    const int id1 = -1;
+    shared_ptr<base> sptr1(new derived(id1));
+    const int id2 = -2;
+    shared_ptr<base> sptr2(new derived(id2));
+    const int id3 = -3;
+    shared_ptr<base> sptr3(new derived(id3));
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+    EXPECT_EQ(id1, sptr1->id());
+
+    EXPECT_EQ(1, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+    EXPECT_EQ(id2, sptr2->id());
+
+    EXPECT_EQ(1, sptr3.use_count());
+    EXPECT_TRUE(sptr3);
+    EXPECT_EQ(id3, sptr3->id());
+
+    std::thread t1 {[&](){
+        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
+            shared_ptr<base> sptr(new derived(loop_cnt));
+            EXPECT_EQ(loop_cnt, sptr->id());
+
+            sptr1.swap(sptr);
+            EXPECT_EQ(loop_cnt, sptr1->id());
+        }
+    }};
+
+    std::thread t2 {[&](){
+        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
+            shared_ptr<base> sptr(new derived(loop_cnt));
+            EXPECT_EQ(loop_cnt, sptr->id());
+
+            sptr2.swap(sptr);
+            EXPECT_EQ(loop_cnt, sptr2->id());
+        }
+    }};
+
+    std::thread t3 {[&](){
+        for (int loop_cnt = 0; loop_cnt < counter; ++loop_cnt) {
+            shared_ptr<base> sptr(new derived(loop_cnt));
+            EXPECT_EQ(loop_cnt, sptr->id());
+
+            sptr3.swap(sptr);
+            EXPECT_EQ(loop_cnt, sptr3->id());
+        }
+    }};
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+    EXPECT_EQ(counter - 1, sptr1->id());
+
+    EXPECT_EQ(1, sptr2.use_count());
+    EXPECT_TRUE(sptr2);
+    EXPECT_EQ(counter - 1, sptr2->id());
+
+    EXPECT_EQ(1, sptr3.use_count());
+    EXPECT_TRUE(sptr3);
+    EXPECT_EQ(counter - 1, sptr3->id());
+}
 
 } // end of anonymous namespace
 

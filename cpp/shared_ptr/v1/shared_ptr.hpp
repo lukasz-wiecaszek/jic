@@ -3,9 +3,6 @@
  *
  * The api is a subset of that exposed by std:shared_ptr.
  *
- * The biggest (in my opinion) difference to std:shared_ptr is that you can specify
- * whether you want (or not) to have thread-safe access to the shared_ptr's managed object.
- *
  * This implementation do not distinguish between managed and stored pointers
  * (there is no aliasing constructor).
  *
@@ -273,25 +270,7 @@ public:
         return *this;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /* Reset methods */
 
     void reset()
     {
@@ -304,6 +283,7 @@ public:
     template<typename U>
     void reset(U* ptr)
     {
+        static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
 #endif
@@ -314,6 +294,7 @@ public:
     template<typename U, typename D>
     void reset(U* ptr, D deleter)
     {
+        static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
 #if defined(DEBUG_SHARED_PTR)
         std::cout << __PRETTY_FUNCTION__ << std::endl;
 #endif
@@ -321,8 +302,13 @@ public:
         set(ptr, deleter);
     }
 
+    /* Swap */
+
     void swap(shared_ptr &other)
     {
+#if defined(DEBUG_SHARED_PTR)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
         if (m_ptr != other.m_ptr) {
              T *tmp_ptr = m_ptr;
              m_ptr = other.m_ptr;
@@ -333,6 +319,8 @@ public:
              other.m_control_block = tmp_block;
         }
     }
+
+    /* Observers */
 
     T* get() const
     {
@@ -349,7 +337,7 @@ public:
         return m_ptr;
     }
 
-    long int use_count() const
+    long use_count() const
     {
         return (m_control_block) ? m_control_block->use_count() : 0;
     }
@@ -391,11 +379,12 @@ private:
     {
     public:
         control_block_base() :
-            m_refcount(1)
+            m_refcount{}
         {
 #if defined(DEBUG_SHARED_PTR)
             std::cout << __PRETTY_FUNCTION__ << std::endl;
 #endif
+            m_refcount.store(1, std::memory_order_relaxed);
         }
 
         virtual ~control_block_base()
@@ -407,7 +396,7 @@ private:
 
         long int use_count() const
         {
-            return m_refcount;
+            return m_refcount.load(std::memory_order_relaxed);
         }
 
         void get()
@@ -435,8 +424,8 @@ private:
     {
     public:
         control_block(D deleter) :
-            control_block_base(),
-            m_deleter(deleter)
+            control_block_base{},
+            m_deleter{deleter}
         {
         }
 
@@ -453,7 +442,8 @@ private:
     void set(U* ptr, D deleter)
     {
         m_ptr = ptr;
-        m_control_block = new control_block<U, D>(deleter);
+        if (m_ptr)
+            m_control_block = new control_block<U, D>(deleter);
     }
 
     template<typename U>

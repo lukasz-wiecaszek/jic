@@ -6,8 +6,6 @@ TEST(shared_ptr, create_1_onstack)
 
     EXPECT_EQ(0, sptr.use_count());
     EXPECT_FALSE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
 }
 
 TEST(shared_ptr, create_1_onheap)
@@ -17,7 +15,6 @@ TEST(shared_ptr, create_1_onheap)
     EXPECT_EQ(0, sptr->use_count());
     EXPECT_FALSE(*sptr);
 
-    std::cout << sptr->to_string() << std::endl;
     delete sptr;
 }
 
@@ -27,8 +24,6 @@ TEST(shared_ptr, create_2_onstack)
 
     EXPECT_EQ(0, sptr.use_count());
     EXPECT_FALSE(sptr);
-
-    std::cout << (std::string)sptr << std::endl;
 }
 
 TEST(shared_ptr, create_2_onheap)
@@ -38,7 +33,6 @@ TEST(shared_ptr, create_2_onheap)
     EXPECT_EQ(0, sptr->use_count());
     EXPECT_FALSE(*sptr);
 
-    std::cout << sptr->to_string() << std::endl;
     delete sptr;
 }
 
@@ -46,49 +40,71 @@ TEST(shared_ptr, create_2_onheap)
 
 TEST(shared_ptr, create_3_onstack)
 {
-    shared_ptr<base> sptr(new base(1));
+    shared_ptr<base> sptr1(new base(1));
 
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
 
-    std::cout << (std::string)sptr << std::endl;
+    shared_ptr<base> sptr2(reinterpret_cast<base*>(0));
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
 }
 
 TEST(shared_ptr, create_3_onheap)
 {
-    shared_ptr<base> *sptr = new shared_ptr<base>(new base(1));
+    shared_ptr<base> *sptr1 = new shared_ptr<base>(new base(1));
 
-    EXPECT_EQ(1, sptr->use_count());
-    EXPECT_TRUE(*sptr);
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
 
-    std::cout << sptr->to_string() << std::endl;
-    delete sptr;
+    delete sptr1;
+
+    shared_ptr<base> *sptr2 = new shared_ptr<base>(reinterpret_cast<base*>(0));
+
+    EXPECT_EQ(0, sptr2->use_count());
+    EXPECT_FALSE(*sptr2);
+
+    delete sptr2;
 }
 
 TEST(shared_ptr, create_4_onstack)
 {
-    shared_ptr<base> sptr(new base(1), deleter());
+    shared_ptr<base> sptr1(new base(1), deleter());
 
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
 
-    std::cout << (std::string)sptr << std::endl;
+    shared_ptr<base> sptr2(reinterpret_cast<base*>(0), deleter());
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
 }
 
 TEST(shared_ptr, create_4_onheap)
 {
-    shared_ptr<base> *sptr = new shared_ptr<base>(new base(1), deleter());
+    shared_ptr<base> *sptr1 = new shared_ptr<base>(new base(1), deleter());
 
-    EXPECT_EQ(1, sptr->use_count());
-    EXPECT_TRUE(*sptr);
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
 
-    std::cout << sptr->to_string() << std::endl;
-    delete sptr;
+    delete sptr1;
+
+    shared_ptr<base> *sptr2 = new shared_ptr<base>(reinterpret_cast<base*>(0), deleter());
+
+    EXPECT_EQ(0, sptr2->use_count());
+    EXPECT_FALSE(*sptr2);
+
+    delete sptr2;
 }
 
 TEST(shared_ptr, create_5_onstack)
 {
     shared_ptr<base> sptr1(new base(1));
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
     shared_ptr<base> sptr2(sptr1);
 
     EXPECT_EQ(2, sptr1.use_count());
@@ -97,13 +113,23 @@ TEST(shared_ptr, create_5_onstack)
     EXPECT_EQ(2, sptr2.use_count());
     EXPECT_TRUE(sptr2);
 
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
+    shared_ptr<base> sptr3(nullptr);
+    shared_ptr<base> sptr4(sptr3);
+
+    EXPECT_EQ(0, sptr3.use_count());
+    EXPECT_FALSE(sptr3);
+
+    EXPECT_EQ(0, sptr4.use_count());
+    EXPECT_FALSE(sptr4);
 }
 
 TEST(shared_ptr, create_5_onheap)
 {
     shared_ptr<base> *sptr1 = new shared_ptr<base>(new base(1));
+
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
+
     shared_ptr<base> *sptr2 = sptr1;
 
     EXPECT_EQ(1, sptr1->use_count());
@@ -112,15 +138,16 @@ TEST(shared_ptr, create_5_onheap)
     EXPECT_EQ(1, sptr2->use_count());
     EXPECT_TRUE(*sptr2);
 
-    std::cout << sptr1->to_string() << std::endl;
-    std::cout << sptr2->to_string() << std::endl;
-
     delete sptr1;
 }
 
 TEST(shared_ptr, create_6_onstack)
 {
     shared_ptr<base> sptr1(new base(1));
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
     shared_ptr<base> sptr2(std::move(sptr1));
 
     EXPECT_EQ(0, sptr1.use_count());
@@ -129,13 +156,23 @@ TEST(shared_ptr, create_6_onstack)
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
 
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
+    shared_ptr<base> sptr3(nullptr);
+    shared_ptr<base> sptr4(std::move(sptr3));
+
+    EXPECT_EQ(0, sptr3.use_count());
+    EXPECT_FALSE(sptr3);
+
+    EXPECT_EQ(0, sptr4.use_count());
+    EXPECT_FALSE(sptr4);
 }
 
 TEST(shared_ptr, create_6_onheap)
 {
     shared_ptr<base> *sptr1 = new shared_ptr<base>(new base(1));
+
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
+
     shared_ptr<base> *sptr2 = std::move(sptr1);
 
     EXPECT_EQ(1, sptr1->use_count());
@@ -143,9 +180,6 @@ TEST(shared_ptr, create_6_onheap)
 
     EXPECT_EQ(1, sptr2->use_count());
     EXPECT_TRUE(*sptr2);
-
-    std::cout << sptr1->to_string() << std::endl;
-    std::cout << sptr2->to_string() << std::endl;
 
     delete sptr1;
 }
@@ -154,49 +188,71 @@ TEST(shared_ptr, create_6_onheap)
 
 TEST(shared_ptr, create_7_onstack)
 {
-    shared_ptr<base> sptr(new derived(1));
+    shared_ptr<base> sptr1(new derived(1));
 
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
 
-    std::cout << (std::string)sptr << std::endl;
+    shared_ptr<base> sptr2(reinterpret_cast<derived*>(0));
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
 }
 
 TEST(shared_ptr, create_7_onheap)
 {
-    shared_ptr<base> *sptr = new shared_ptr<base>(new derived(1));
+    shared_ptr<base> *sptr1 = new shared_ptr<base>(new derived(1));
 
-    EXPECT_EQ(1, sptr->use_count());
-    EXPECT_TRUE(*sptr);
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
 
-    std::cout << sptr->to_string() << std::endl;
-    delete sptr;
+    delete sptr1;
+
+    shared_ptr<base> *sptr2 = new shared_ptr<base>(reinterpret_cast<derived*>(0));
+
+    EXPECT_EQ(0, sptr2->use_count());
+    EXPECT_FALSE(*sptr2);
+
+    delete sptr2;
 }
 
 TEST(shared_ptr, create_8_onstack)
 {
-    shared_ptr<base> sptr(new derived(1), deleter());
+    shared_ptr<base> sptr1(new derived(1), deleter());
 
-    EXPECT_EQ(1, sptr.use_count());
-    EXPECT_TRUE(sptr);
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
 
-    std::cout << (std::string)sptr << std::endl;
+    shared_ptr<base> sptr2(reinterpret_cast<derived*>(0), deleter());
+
+    EXPECT_EQ(0, sptr2.use_count());
+    EXPECT_FALSE(sptr2);
 }
 
 TEST(shared_ptr, create_8_onheap)
 {
-    shared_ptr<base> *sptr = new shared_ptr<base>(new derived(1), deleter());
+    shared_ptr<base> *sptr1 = new shared_ptr<base>(new derived(1), deleter());
 
-    EXPECT_EQ(1, sptr->use_count());
-    EXPECT_TRUE(*sptr);
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
 
-    std::cout << sptr->to_string() << std::endl;
-    delete sptr;
+    delete sptr1;
+
+    shared_ptr<base> *sptr2 = new shared_ptr<base>(reinterpret_cast<derived*>(0), deleter());
+
+    EXPECT_EQ(0, sptr2->use_count());
+    EXPECT_FALSE(*sptr2);
+
+    delete sptr2;
 }
 
 TEST(shared_ptr, create_9_onstack)
 {
     shared_ptr<derived> sptr1(new derived(1));
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
     shared_ptr<base> sptr2(sptr1);
 
     EXPECT_EQ(2, sptr1.use_count());
@@ -205,13 +261,23 @@ TEST(shared_ptr, create_9_onstack)
     EXPECT_EQ(2, sptr2.use_count());
     EXPECT_TRUE(sptr2);
 
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
+    shared_ptr<derived> sptr3(nullptr);
+    shared_ptr<base> sptr4(sptr3);
+
+    EXPECT_EQ(0, sptr3.use_count());
+    EXPECT_FALSE(sptr3);
+
+    EXPECT_EQ(0, sptr4.use_count());
+    EXPECT_FALSE(sptr4);
 }
 
 TEST(shared_ptr, create_9_onheap)
 {
     shared_ptr<derived> *sptr1 = new shared_ptr<derived>(new derived(1));
+
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
+
     shared_ptr<base> *sptr2 = reinterpret_cast<shared_ptr<base>*>(sptr1);
 
     EXPECT_EQ(1, sptr1->use_count());
@@ -220,15 +286,16 @@ TEST(shared_ptr, create_9_onheap)
     EXPECT_EQ(1, sptr2->use_count());
     EXPECT_TRUE(*sptr2);
 
-    std::cout << sptr1->to_string() << std::endl;
-    std::cout << sptr2->to_string() << std::endl;
-
     delete sptr1;
 }
 
 TEST(shared_ptr, create_10_onstack)
 {
     shared_ptr<derived> sptr1(new derived(1));
+
+    EXPECT_EQ(1, sptr1.use_count());
+    EXPECT_TRUE(sptr1);
+
     shared_ptr<base> sptr2(std::move(sptr1));
 
     EXPECT_EQ(0, sptr1.use_count());
@@ -237,13 +304,23 @@ TEST(shared_ptr, create_10_onstack)
     EXPECT_EQ(1, sptr2.use_count());
     EXPECT_TRUE(sptr2);
 
-    std::cout << (std::string)sptr1 << std::endl;
-    std::cout << (std::string)sptr2 << std::endl;
+    shared_ptr<derived> sptr3(nullptr);
+    shared_ptr<base> sptr4(std::move(sptr3));
+
+    EXPECT_EQ(0, sptr3.use_count());
+    EXPECT_FALSE(sptr3);
+
+    EXPECT_EQ(0, sptr4.use_count());
+    EXPECT_FALSE(sptr4);
 }
 
 TEST(shared_ptr, create_10_onheap)
 {
     shared_ptr<base> *sptr1 = new shared_ptr<base>(new derived(1));
+
+    EXPECT_EQ(1, sptr1->use_count());
+    EXPECT_TRUE(*sptr1);
+
     shared_ptr<base> *sptr2 = std::move(sptr1);
 
     EXPECT_EQ(1, sptr1->use_count());
@@ -251,9 +328,6 @@ TEST(shared_ptr, create_10_onheap)
 
     EXPECT_EQ(1, sptr2->use_count());
     EXPECT_TRUE(*sptr2);
-
-    std::cout << sptr1->to_string() << std::endl;
-    std::cout << sptr2->to_string() << std::endl;
 
     delete sptr1;
 }

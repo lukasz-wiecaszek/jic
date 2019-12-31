@@ -3,9 +3,6 @@
  *
  * The api is a subset of that exposed by std:shared_ptr.
  *
- * The biggest (in my opinion) difference to std:shared_ptr is that you can specify
- * whether you want to have thread-safe access or not to the shared_ptr's managed object.
- *
  * This implementation do not distinguish between managed and stored pointers
  * (there is no aliasing constructor).
  *
@@ -54,7 +51,7 @@ namespace ymn
 template<typename T>
 class ref_base /* smells like android, isn't it? */
 {
-    //static_assert(std::is_base_of<ref_base, T>::value, "T must inherit from ref_base");
+    //static_assert(std::is_base_of<ref_base<T>, T>::value, "T must inherit from ref_base<T> - CRTP");
 
 public:
     void get()
@@ -75,23 +72,23 @@ public:
 
     long use_count() const
     {
-        return m_refcount;
+        return m_refcount.load(std::memory_order_relaxed);
     }
 
-    template<typename D>
-    void set_deleter(D deleter)
+    void set_deleter(std::function<void(T*)> deleter)
     {
        m_deleter = deleter;
     }
 
 protected:
      ref_base() :
-        m_refcount(1),
-        m_deleter()
+        m_refcount{},
+        m_deleter{}
     {
+        m_refcount.store(1, std::memory_order_relaxed);
     }
 
-    ~ref_base() = default;
+    virtual ~ref_base() = default;
 
 private:
     std::atomic<long> m_refcount;
@@ -103,8 +100,6 @@ class shared_ptr
 {
     template<typename T1>
     friend class shared_ptr;
-
-    //static_assert(std::is_base_of<ref_base, T>::value, "T must inherit from ref_base");
 
 public:
     typedef T element_type;
@@ -316,41 +311,81 @@ public:
        return *this;
     }
 
+    /* Reset methods */
 
+    void reset()
+    {
+#if defined(DEBUG_SHARED_PTR)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
+        if (m_ptr) {
+            m_ptr->put();
+            m_ptr = nullptr;
+        }
+    }
 
+    template<typename U>
+    void reset(U* ptr)
+    {
+        static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
+#if defined(DEBUG_SHARED_PTR)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
+        if (m_ptr) {
+            m_ptr->put();
+            m_ptr = nullptr;
+        }
 
+        m_ptr = ptr;
+    }
 
+    template<typename U, typename D>
+    void reset(U* ptr, D deleter)
+    {
+        static_assert(std::is_convertible<U*, T*>::value, "U* is not convertible to T*");
+#if defined(DEBUG_SHARED_PTR)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
+        if (m_ptr) {
+            m_ptr->put();
+            m_ptr = nullptr;
+        }
 
+        m_ptr = ptr;
+        if (m_ptr)
+            m_ptr->set_deleter(deleter);
+    }
 
+    /* Swap */
 
+    void swap(shared_ptr &other)
+    {
+#if defined(DEBUG_SHARED_PTR)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
+        if (m_ptr != other.m_ptr) {
+             T *tmp_ptr = m_ptr;
+             m_ptr = other.m_ptr;
+             other.m_ptr = tmp_ptr;
+        }
+    }
 
+    /* Observers */
 
+    T* get() const
+    {
+        return m_ptr;
+    }
 
+    T& operator * () const
+    {
+        return *m_ptr;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    T* operator -> () const
+    {
+        return m_ptr;
+    }
 
     long use_count() const
     {

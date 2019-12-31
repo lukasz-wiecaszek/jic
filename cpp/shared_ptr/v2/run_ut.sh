@@ -4,7 +4,7 @@ set -e
 set -x
 
 UT_SRC='shared_ptr.hpp'
-UT_BIN='shared_ptr_test'
+UT_BIN='shared_ptr_ut'
 
 make clean
 make all
