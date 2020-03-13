@@ -1,7 +1,8 @@
 /**
- * @file work.hpp
+ * @file ringbuffer.hpp
  *
- * Class representing/implementing a work design pattern.
+ * Definition of generic ringbuffer design pattern.
+ * Its non-blocking path is completely lockless.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
  *
@@ -15,20 +16,21 @@
  * See the GNU General Public License for more details.
  */
 
-#ifndef _WORK_HPP_
-#define _WORK_HPP_
+#ifndef _RINGBUFFER_HPP_
+#define _RINGBUFFER_HPP_
 
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
-#include <tuple>      /* for std::tuple */
-#include <functional> /* for std::function */
-#include <memory>     /* for std::shared_ptr */
-#include <utility>    /* for std::integer_sequence */
+#if defined(DEBUG_RINGBUFFER)
+#include <iostream>
+#endif
 
 /*===========================================================================*\
  * project header files
 \*===========================================================================*/
+#include "iringbuffer.hpp"
+#include "oringbuffer.hpp"
 
 /*===========================================================================*\
  * preprocessor #define constants and macros
@@ -40,60 +42,36 @@
 namespace ymn
 {
 
-struct work_base
-{
-    virtual ~work_base() {};
-    virtual void run() const = 0;
-};
-
-typedef std::shared_ptr<work_base> work_base_sptr;
-
-template<typename... Args>
-class work : public work_base
+template<typename T>
+class ringbuffer : public iringbuffer<T>, public oringbuffer<T>
 {
 public:
-    typedef std::function<void(Args...)> function;
-    typedef std::tuple<Args...> arguments;
+    typedef T value_type;
 
-    work(const function& func, Args... args) :
-       m_function{func},
-       m_args{args...}
+    explicit ringbuffer(std::size_t capacity, std::bitset<RINGBUFFER_NONBLOCKING_FLAGS_MAX> flags) :
+        ringbuffer_base<T>::ringbuffer_base{capacity, flags}
     {
+#if defined(DEBUG_RINGBUFFER)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+        std::cout << ringbuffer_base<T>::to_string() << std::endl;
+#endif
     }
 
-    ~work() override
+    ~ringbuffer() override
     {
+#if defined(DEBUG_RINGBUFFER)
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+#endif
     }
-
-    void run() const override final
-    {
-        func(m_args);
-    }
-
-private:
-    template<std::size_t... Is>
-    void func(const arguments& args, std::index_sequence<Is...>) const
-    {
-        m_function(std::get<Is>(args)...);
-    }
-
-    void func(const arguments& args) const
-    {
-        func(args, std::make_index_sequence<sizeof...(Args)>{});
-    }
-
-private:
-    function  m_function;
-    arguments m_args;
 };
+
+} /* end of namespace ymn */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
 namespace ymn
 {
-
-} /* end of namespace ymn */
 
 } /* end of namespace ymn */
 
@@ -113,4 +91,4 @@ namespace ymn
 
 } /* end of namespace ymn */
 
-#endif /* _WORK_HPP_ */
+#endif /* _RINGBUFFER_HPP_ */
