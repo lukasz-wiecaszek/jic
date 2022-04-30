@@ -1,28 +1,39 @@
-/* SPDX-License-Identifier: MIT */
 /**
- * @file template.cpp
+ * @file template.h
  *
- * Brief description of what's inside this header file.
+ * Brief description of what's this file for.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  */
 
-#ifndef _TEMPLATE_HPP_
-#define _TEMPLATE_HPP_
+#ifndef _TEMPLATE_H_
+#define _TEMPLATE_H_
+
+#if defined(__cplusplus)
+    #define LTS_EXTERN extern "C"
+#else
+    #define LTS_EXTERN extern
+#endif
 
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
-#include <iostream>
-#include <string>
-
-#include <cstddef>
-#include <cmath>
+#include <stdint.h>
+#include <string.h>
 
 /*===========================================================================*\
  * project header files
 \*===========================================================================*/
-#include <my_project_specific_header_file.hpp>
+#include <my_project_specific_header_file.h>
 
 /*===========================================================================*\
  * preprocessor #define constants and macros
@@ -33,72 +44,29 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+struct point
 {
-
-template<typename T>
-class class_a :
-    public    class_b1,
-    protected class_b2,
-    private   class_b3
-{
-public:
-    class_a(T member1, T member2, T member3) :
-        class_b1{},
-        class_b2{},
-        class_b3{},
-        m_member1{member1},
-        m_member2{member2},
-        m_member3{member3}
-    {
-    }
-
-    ~class_a();
-
-protected:
-    void dummy_method();
-
-private:
-    T m_member1;
-    T m_member2;
-    T m_member3;
+    int x;
+    int y;
 };
 
-} /* end of namespace ymn */
-
 /*===========================================================================*\
- * inline function/variable definitions
+ * static inline (internal linkage) function definitions
 \*===========================================================================*/
-namespace ymn
-{
-
-static inline void my_inline_function_definition()
+static inline int my_inline_function1(void)
 {
     return 42;
 }
 
-} /* end of namespace ymn */
+/*===========================================================================*\
+ * global (external linkage) object declarations
+\*===========================================================================*/
+LTS_EXTERN int my_global_object;
 
 /*===========================================================================*\
- * global object declarations
+ * function forward declarations (external linkage)
 \*===========================================================================*/
-namespace ymn
-{
+LTS_EXTERN void my_function1(void);
+LTS_EXTERN void my_function2(const char* str);
 
-extern int my_global_object;
-
-} /* end of namespace ymn */
-
-/*===========================================================================*\
- * function forward declarations
-\*===========================================================================*/
-namespace ymn
-{
-
-void my_function_declaration1();
-void my_function_declaration2(const std::string& str);
-void my_function_declaration3(const std::string* str);
-
-} /* end of namespace ymn */
-
-#endif /* _TEMPLATE_HPP_ */
+#endif /* _TEMPLATE_H_ */
