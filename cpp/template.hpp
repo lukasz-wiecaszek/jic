@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT */
 /**
- * @file template.cpp
+ * @file template.hpp
  *
  * Brief description of what's inside this header file.
  *
@@ -31,9 +31,9 @@
 #define MY_PREPROCESSOR_MACRO(x) ((x) + 42)
 
 /*===========================================================================*\
- * global type definitions
+ * global types definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 template<typename T>
@@ -43,13 +43,13 @@ class class_a :
     private   class_b3
 {
 public:
-    class_a(T member1, T member2, T member3) :
-        class_b1{},
-        class_b2{},
-        class_b3{},
-        m_member1{member1},
-        m_member2{member2},
-        m_member3{member3}
+    class_a(T member1, T member2, T member3)
+    : class_b1{}
+    , class_b2{}
+    , class_b3{}
+    , m_member1{member1}
+    , m_member2{member2}
+    , m_member3{member3}
     {
     }
 
@@ -64,12 +64,12 @@ private:
     T m_member3;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 static inline void my_inline_function_definition()
@@ -77,28 +77,28 @@ static inline void my_inline_function_definition()
     return 42;
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
- * global object declarations
+ * global (external linkage) objects declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 extern int my_global_object;
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
- * function forward declarations
+ * function forward declarations (external linkage)
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 void my_function_declaration1();
 void my_function_declaration2(const std::string& str);
 void my_function_declaration3(const std::string* str);
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _TEMPLATE_HPP_ */
