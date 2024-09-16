@@ -1,18 +1,10 @@
+/* SPDX-License-Identifier: MIT */
 /**
  * @file template.h
  *
  * Brief description of what's this file for.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU General Public License,
- * version 2, as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
  */
 
 #ifndef _TEMPLATE_H_
@@ -42,7 +34,7 @@
 #define MY_PREPROCESSOR_MACRO(x) ((x) + 42)
 
 /*===========================================================================*\
- * global type definitions
+ * global types definitions
 \*===========================================================================*/
 struct point
 {
@@ -51,15 +43,15 @@ struct point
 };
 
 /*===========================================================================*\
- * static inline (internal linkage) function definitions
+ * static (internal linkage) functions definitions
 \*===========================================================================*/
-static inline int my_inline_function1(void)
+static int my_inline_function1(void)
 {
     return 42;
 }
 
 /*===========================================================================*\
- * global (external linkage) object declarations
+ * global (external linkage) objects declarations
 \*===========================================================================*/
 LTS_EXTERN int my_global_object;
 
