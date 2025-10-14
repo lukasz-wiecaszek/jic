@@ -35,7 +35,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 template<typename T>
@@ -196,12 +196,12 @@ private:
     T m_im;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 template<typename T>
@@ -362,22 +362,22 @@ constexpr bool operator != (T lhs, const complex<T>& rhs)
     return !(lhs == rhs);
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _COMPLEX_ */

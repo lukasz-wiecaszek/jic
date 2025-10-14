@@ -35,23 +35,23 @@
 \*===========================================================================*/
 #define EXPECT_SUCCESS(str, in, out) \
     do { \
-        EXPECT_EQ(ymn::strtointeger_conversion_status_e::success, ymn::strtointeger(str, out)); \
+        EXPECT_EQ(lts::strtointeger_conversion_status_e::success, lts::strtointeger(str, out)); \
         EXPECT_EQ(in, out); \
     } while (0)
 
 #define EXPECT_INVALID_ARGUMENT(str, out) \
     do { \
-        EXPECT_EQ(ymn::strtointeger_conversion_status_e::invalid_argument, ymn::strtointeger(str, out)); \
+        EXPECT_EQ(lts::strtointeger_conversion_status_e::invalid_argument, lts::strtointeger(str, out)); \
     } while (0)
 
 #define EXPECT_OUT_OF_RANGE(str, out) \
     do { \
-        EXPECT_EQ(ymn::strtointeger_conversion_status_e::out_of_range, ymn::strtointeger(str, out)); \
+        EXPECT_EQ(lts::strtointeger_conversion_status_e::out_of_range, lts::strtointeger(str, out)); \
     } while (0)
 
 #define EXPECT_CONVERSION_ERROR(str, out) \
     do { \
-        EXPECT_EQ(ymn::strtointeger_conversion_status_e::conversion_error, ymn::strtointeger(str, out)); \
+        EXPECT_EQ(lts::strtointeger_conversion_status_e::conversion_error, lts::strtointeger(str, out)); \
     } while (0)
 
 /*===========================================================================*\

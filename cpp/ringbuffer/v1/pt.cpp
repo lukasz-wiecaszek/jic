@@ -77,7 +77,7 @@ int main()
 
     t1 = std::chrono::high_resolution_clock::now();
 
-    ymn::ringbuffer<std::size_t, CAPACITY, false> rb;
+    lts::ringbuffer<std::size_t, CAPACITY, false> rb;
 
     std::thread producer {producer_function<decltype(rb), 1>, std::ref(rb), iterations};
     std::thread consumer {consumer_function<decltype(rb), 1>, std::ref(rb), iterations};
@@ -123,7 +123,7 @@ static void producer_function(RB& rb, std::size_t iterations)
             array[j] = produced + j;
         status = rb.write(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -156,7 +156,7 @@ static void consumer_function(RB& rb, std::size_t iterations)
         memset(array, 0, sizeof(array));
         status = rb.read(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }

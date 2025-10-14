@@ -66,7 +66,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 enum class nal_unit_type_e : int32_t
@@ -76,12 +76,12 @@ enum class nal_unit_type_e : int32_t
 #undef NAL_UNIT_TYPE
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 constexpr const char* to_string(nal_unit_type_e e)
@@ -97,22 +97,22 @@ constexpr const char* to_string(nal_unit_type_e e)
     return str;
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _NAL_UNIT_TYPE_HPP_ */

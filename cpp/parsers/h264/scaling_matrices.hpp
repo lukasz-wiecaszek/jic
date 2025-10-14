@@ -54,7 +54,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -120,17 +120,17 @@ struct scaling_matrices : public h264_structure
 };
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
-/* Table 7-3 – Specification of default scaling lists Default_4x4_Intra and Default_4x4_Inter */
+/* Table 7-3 ï¿½ Specification of default scaling lists Default_4x4_Intra and Default_4x4_Inter */
 inline const uint8_t scaling_list_default_4x4[2][16] =
 {
     {  6, 13, 20, 28, 13, 20, 28, 32,
@@ -139,7 +139,7 @@ inline const uint8_t scaling_list_default_4x4[2][16] =
       20, 24, 27, 30, 24, 27, 30, 34 }
 };
 
-/* Table 7-4 – Specification of default scaling lists Default_8x8_Intra and Default_8x8_Inter */
+/* Table 7-4 ï¿½ Specification of default scaling lists Default_8x8_Intra and Default_8x8_Inter */
 inline const uint8_t scaling_list_default_8x8[2][64] =
 {
     {  6, 10, 13, 16, 18, 23, 25, 27,
@@ -244,22 +244,22 @@ inline std::string scaling_matrices::to_string() const
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _SCALING_MATRICES_HPP_ */

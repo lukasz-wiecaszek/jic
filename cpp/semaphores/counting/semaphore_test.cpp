@@ -69,14 +69,14 @@ namespace
 
 TEST(semaphore, create_on_stack)
 {
-    ymn::semaphore sem(3);
+    lts::semaphore sem(3);
 
     ASSERT_EQ(3, sem.get_value());
 
     while (sem.get_value() > 0)
         sem.wait();
 
-    std::thread t1 {[](ymn::semaphore* sem){
+    std::thread t1 {[](lts::semaphore* sem){
         sem->post();
         sem->wait();
         sem->post();
@@ -84,7 +84,7 @@ TEST(semaphore, create_on_stack)
         sem->post();
     }, &sem};
 
-    std::thread t2 {[](ymn::semaphore& sem){
+    std::thread t2 {[](lts::semaphore& sem){
         sem.wait();
         sem.post();
         sem.wait_timeout(WAIT_TIMEOUT_MSEC);
@@ -98,14 +98,14 @@ TEST(semaphore, create_on_stack)
 
 TEST(semaphore, create_on_heap)
 {
-    ymn::semaphore *sem = new (std::nothrow) ymn::semaphore(3);
+    lts::semaphore *sem = new (std::nothrow) lts::semaphore(3);
 
     ASSERT_EQ(3, sem->get_value());
 
     while (sem->get_value() > 0)
         sem->wait();
 
-    std::thread t1 {[](ymn::semaphore* sem){
+    std::thread t1 {[](lts::semaphore* sem){
         sem->post();
         sem->wait();
         sem->post();
@@ -113,7 +113,7 @@ TEST(semaphore, create_on_heap)
         sem->post();
     }, sem};
 
-    std::thread t2 {[](ymn::semaphore& sem){
+    std::thread t2 {[](lts::semaphore& sem){
         sem.wait();
         sem.post();
         sem.wait_timeout(WAIT_TIMEOUT_MSEC);
@@ -129,14 +129,14 @@ TEST(semaphore, create_on_heap)
 
 TEST(semaphore, wait_interrupted)
 {
-    ymn::semaphore sem(3);
+    lts::semaphore sem(3);
 
     ASSERT_EQ(3, sem.get_value());
 
     while (sem.get_value() > 0)
         sem.wait();
 
-    std::thread t1 {[](ymn::semaphore* sem){
+    std::thread t1 {[](lts::semaphore* sem){
         std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_TIMEOUT_MSEC / 2));
         sem->post();
     }, &sem};
@@ -148,14 +148,14 @@ TEST(semaphore, wait_interrupted)
 
 TEST(semaphore, wait_timeout_interrupted)
 {
-    ymn::semaphore sem(3);
+    lts::semaphore sem(3);
 
     ASSERT_EQ(3, sem.get_value());
 
     while (sem.get_value() > 0)
         EXPECT_TRUE(sem.wait_timeout(WAIT_TIMEOUT_MSEC));
 
-    std::thread t1 {[](ymn::semaphore* sem){
+    std::thread t1 {[](lts::semaphore* sem){
         std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_TIMEOUT_MSEC / 2));
         sem->post();
     }, &sem};
@@ -167,7 +167,7 @@ TEST(semaphore, wait_timeout_interrupted)
 
 TEST(semaphore, wait_timeout)
 {
-    ymn::semaphore sem(3);
+    lts::semaphore sem(3);
 
     ASSERT_EQ(3, sem.get_value());
 

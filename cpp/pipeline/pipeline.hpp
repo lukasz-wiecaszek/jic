@@ -42,15 +42,15 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 class pipeline
@@ -112,7 +112,7 @@ public:
         m_running = false;
         if (m_size > 1) {
             for (std::size_t n = 0; n < (m_size - 1); ++n)
-                m_ringbuffers[n]->cancel(ymn::ringbuffer_role::CONSUMER);
+                m_ringbuffers[n]->cancel(lts::ringbuffer_role::CONSUMER);
         }
     }
 
@@ -174,22 +174,22 @@ private:
     std::atomic<bool> m_running;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _PIPELINE_ */

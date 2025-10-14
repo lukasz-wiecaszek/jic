@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
         switch(c) {
             case 'c':
-                status = (ymn::strtointeger_conversion_status_e::success == ymn::strtointeger(optarg, capacity));
+                status = (lts::strtointeger_conversion_status_e::success == lts::strtointeger(optarg, capacity));
                 if (!status) {
                     std::cerr << "error: cannot convert '" << optarg << "' to integer" << std::endl;
                     pt_usage(argv[0]);
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
                 break;
 
             case 'i':
-                status = (ymn::strtointeger_conversion_status_e::success == ymn::strtointeger(optarg, iterations));
+                status = (lts::strtointeger_conversion_status_e::success == lts::strtointeger(optarg, iterations));
                 if (!status) {
                     std::cerr << "error: cannot convert '" << optarg << "' to integer" << std::endl;
                     pt_usage(argv[0]);
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 
     t1 = std::chrono::high_resolution_clock::now();
 
-    ymn::ringbuffer<std::size_t> rb(capacity, non_blocking);
+    lts::ringbuffer<std::size_t> rb(capacity, non_blocking);
 
     std::thread producer {producer_function<decltype(rb), 1>, std::ref(rb), iterations};
     std::thread consumer {consumer_function<decltype(rb), 1>, std::ref(rb), iterations};
@@ -193,7 +193,7 @@ static void producer_function(RB& rb, std::size_t iterations)
             array[j] = produced + j;
         status = rb.write(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -226,7 +226,7 @@ static void consumer_function(RB& rb, std::size_t iterations)
         memset(array, 0, sizeof(array));
         status = rb.read(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }

@@ -38,15 +38,15 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 enum class strtointeger_conversion_status_e
@@ -178,22 +178,22 @@ inline strtointeger_conversion_status_e strtointeger(const char* str, T& value)
         return strtosi(str, value);
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _STRTOINTEGER_HPP_ */

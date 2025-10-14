@@ -44,7 +44,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -110,12 +110,12 @@ private:
 };
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -132,10 +132,10 @@ inline std::string slice_header::to_string() const
     stream << "slice header:" << std::endl;
 
     stream << P1(nal_ref_idc);
-    stream << P1_INFO(nal_unit_type, ymn::to_string(static_cast<nal_unit_type_e>(nal_unit_type)));
+    stream << P1_INFO(nal_unit_type, lts::to_string(static_cast<nal_unit_type_e>(nal_unit_type)));
 
     stream << P1(first_mb_in_slice);
-    stream << P1_INFO(slice_type, ymn::h264::to_string(static_cast<slice_type_e>(slice_type % 5)));
+    stream << P1_INFO(slice_type, lts::h264::to_string(static_cast<slice_type_e>(slice_type % 5)));
     stream << P1(pic_parameter_set_id);
 
     if (sps->separate_colour_plane_flag)
@@ -226,28 +226,28 @@ inline std::string slice_header::to_string() const
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _SLICE_HEADER_HPP_ */

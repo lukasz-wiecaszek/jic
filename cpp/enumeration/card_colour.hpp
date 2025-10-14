@@ -42,7 +42,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 enum class card_colour_e : int32_t
@@ -67,12 +67,12 @@ public:
     constexpr const char* to_string() const;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 constexpr const char* to_string(card_colour_e e)
@@ -90,25 +90,25 @@ constexpr const char* to_string(card_colour_e e)
 
 constexpr const char* card_colour::to_string() const
 {
-    return ymn::to_string(m_value);
+    return lts::to_string(m_value);
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _CARD_COLOUR_HPP_ */

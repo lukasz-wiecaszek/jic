@@ -65,16 +65,16 @@ namespace
 /*===========================================================================*\
  * local function declarations
 \*===========================================================================*/
-static void parser_mpeg2ts_parse(ymn::parser_mpeg2ts& parser);
-static void parser_mpeg2ts_feed(ymn::parser_mpeg2ts& parser, const uint8_t* data, std::size_t count);
+static void parser_mpeg2ts_parse(lts::parser_mpeg2ts& parser);
+static void parser_mpeg2ts_feed(lts::parser_mpeg2ts& parser, const uint8_t* data, std::size_t count);
 
 /*===========================================================================*\
  * local object definitions
 \*===========================================================================*/
-static ymn::mpeg2ts_pid parser_mpeg2ts_pid = MPEG2TS_PID_INVALID;
+static lts::mpeg2ts_pid parser_mpeg2ts_pid = MPEG2TS_PID_INVALID;
 static std::ofstream parser_mpeg2ts_ofile;
 
-static std::map<ymn::mpeg2ts_pid, std::size_t> parser_mpeg2ts_pids;
+static std::map<lts::mpeg2ts_pid, std::size_t> parser_mpeg2ts_pids;
 
 /*===========================================================================*\
  * inline function definitions
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
         switch(c) {
             case 'p':
-                status = (ymn::strtointeger_conversion_status_e::success == ymn::strtointeger(optarg, pid));
+                status = (lts::strtointeger_conversion_status_e::success == lts::strtointeger(optarg, pid));
                 if (!status) {
                     std::cerr << "error: cannot convert '" << optarg << "' to integer" << std::endl;
                     parser_mpeg2ts_usage(argv[0]);
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 
         memblock = new char[READ_BUFFER_SIZE];
 
-        ymn::parser_mpeg2ts parser(PARSER_BUFFER_SIZE);
+        lts::parser_mpeg2ts parser(PARSER_BUFFER_SIZE);
 
         do {
             count = file.readsome(memblock, READ_BUFFER_SIZE);
@@ -199,36 +199,36 @@ int main(int argc, char *argv[])
 /*===========================================================================*\
  * local function definitions
 \*===========================================================================*/
-static void parser_mpeg2ts_parse(ymn::parser_mpeg2ts& parser)
+static void parser_mpeg2ts_parse(lts::parser_mpeg2ts& parser)
 {
-    ymn::parser_mpeg2ts_status_e status;
+    lts::parser_mpeg2ts_status_e status;
     const uint8_t *tspacket;
 
     do {
         status = parser.parse();
 
         switch (status) {
-            case ymn::parser_mpeg2ts_status_e::SYNC_GAINED:
+            case lts::parser_mpeg2ts_status_e::SYNC_GAINED:
                 std::cout << to_string(status) << std::endl;
                 break;
 
-            case ymn::parser_mpeg2ts_status_e::SYNCHRONIZED:
+            case lts::parser_mpeg2ts_status_e::SYNCHRONIZED:
                 tspacket = parser.get_tspacket();
                 if (parser_mpeg2ts_ofile.is_open())
-                    if (!parser_mpeg2ts_pid.is_valid() || (ymn::parser_mpeg2ts_get_pid(tspacket) == parser_mpeg2ts_pid))
+                    if (!parser_mpeg2ts_pid.is_valid() || (lts::parser_mpeg2ts_get_pid(tspacket) == parser_mpeg2ts_pid))
                         parser_mpeg2ts_ofile.write(reinterpret_cast<const char*>(tspacket), PARSER_MPEG2TS_PACKET_SIZE);
 
-                parser_mpeg2ts_pids[ymn::parser_mpeg2ts_get_pid(tspacket)]++;
+                parser_mpeg2ts_pids[lts::parser_mpeg2ts_get_pid(tspacket)]++;
                 break;
 
-            case ymn::parser_mpeg2ts_status_e::SYNC_LOST:
+            case lts::parser_mpeg2ts_status_e::SYNC_LOST:
                 std::cout << to_string(status) << std::endl;
                 break;
 
-            case ymn::parser_mpeg2ts_status_e::NOT_SYNCHRONIZED:
+            case lts::parser_mpeg2ts_status_e::NOT_SYNCHRONIZED:
                 break;
 
-            case ymn::parser_mpeg2ts_status_e::TRANSPORT_RATE_DETECTED:
+            case lts::parser_mpeg2ts_status_e::TRANSPORT_RATE_DETECTED:
                 std::cout << to_string(status) << std::endl;
                 std::cout << "transport rate: " << parser.get_tspacket_rate() << " packets per second" << std::endl;
                 break;
@@ -236,10 +236,10 @@ static void parser_mpeg2ts_parse(ymn::parser_mpeg2ts& parser)
             default:
                 break;
        }
-    } while (status != ymn::parser_mpeg2ts_status_e::NEED_BYTES);
+    } while (status != lts::parser_mpeg2ts_status_e::NEED_BYTES);
 }
 
-static void parser_mpeg2ts_feed(ymn::parser_mpeg2ts& parser, const uint8_t* data, std::size_t count)
+static void parser_mpeg2ts_feed(lts::parser_mpeg2ts& parser, const uint8_t* data, std::size_t count)
 {
     std::size_t n_written;
 

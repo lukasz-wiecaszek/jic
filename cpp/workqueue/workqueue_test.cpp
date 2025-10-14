@@ -141,25 +141,25 @@ namespace
 TEST(workqueue, create_and_destroy)
 {
     {
-        ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
+        lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
         ASSERT_TRUE(wq.is_valid());
         std::cout << (std::string)wq << std::endl;
     }
 
     {
-        ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
+        lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
         ASSERT_TRUE(wq.is_valid());
         std::cout << (std::string)wq << std::endl;
     }
 
     {
-        ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
+        lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
         ASSERT_TRUE(wq.is_valid());
         std::cout << (std::string)wq << std::endl;
     }
 
     {
-        ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
+        lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
         ASSERT_TRUE(wq.is_valid());
         std::cout << (std::string)wq << std::endl;
     }
@@ -170,12 +170,12 @@ TEST(workqueue, push_work_no_sleep_0_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 0;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_FALSE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -185,12 +185,12 @@ TEST(workqueue, push_work_no_sleep_1_worker)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 0;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -200,12 +200,12 @@ TEST(workqueue, push_work_no_sleep_2_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 0;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -215,12 +215,12 @@ TEST(workqueue, push_work_no_sleep_3_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 0;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -230,12 +230,12 @@ TEST(workqueue, push_work_with_sleep_0_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 100;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 0);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_FALSE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -245,12 +245,12 @@ TEST(workqueue, push_work_with_sleep_1_worker)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 100;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 1);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -260,12 +260,12 @@ TEST(workqueue, push_work_with_sleep_2_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 100;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 2);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }
@@ -275,12 +275,12 @@ TEST(workqueue, push_work_with_sleep_3_workers)
     completion cmpl(10);
     const std::size_t sleep_time_msec = 100;
 
-    ymn::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
+    lts::workqueue wq(::testing::UnitTest::GetInstance()->current_test_info()->name(), 3);
     ASSERT_TRUE(wq.is_valid());
     std::cout << (std::string)wq << std::endl;
 
     for (int i = 0; i < cmpl.count(); ++i)
-        wq.push_work(std::make_shared<ymn::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
+        wq.push_work(std::make_shared<lts::work<int, int, int, completion&>>(test_function, i, i, sleep_time_msec, cmpl));
 
     EXPECT_TRUE(cmpl.wait_timeout(cmpl.count() * sleep_time_msec + 1000));
 }

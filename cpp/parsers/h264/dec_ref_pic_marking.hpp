@@ -41,7 +41,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -79,12 +79,12 @@ struct dec_ref_pic_marking_nonidr : public h264_structure
 };
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -138,28 +138,28 @@ inline std::string dec_ref_pic_marking_nonidr::to_string() const
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _DEC_REF_PIC_MARKING_HPP_ */

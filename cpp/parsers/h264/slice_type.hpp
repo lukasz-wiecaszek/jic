@@ -40,7 +40,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -53,12 +53,12 @@ enum class slice_type_e : int32_t
 };
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -102,22 +102,22 @@ constexpr bool operator != (slice_type_e s, uint32_t v)
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _SLICE_TYPE_HPP_ */

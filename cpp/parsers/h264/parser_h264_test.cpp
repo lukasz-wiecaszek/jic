@@ -61,8 +61,8 @@ namespace
 /*===========================================================================*\
  * local function declarations
 \*===========================================================================*/
-static void parser_h264_parse(ymn::parser_h264& parser);
-static void parser_h264_feed(ymn::parser_h264& parser, const uint8_t* data, std::size_t count);
+static void parser_h264_parse(lts::parser_h264& parser);
+static void parser_h264_feed(lts::parser_h264& parser, const uint8_t* data, std::size_t count);
 
 /*===========================================================================*\
  * local object definitions
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     } encapsulation = {};
     const char* ofile = nullptr;
 
-    ymn::parser_h264_container_e container = ymn::parser_h264_container_e::NONE;
+    lts::parser_h264_container_e container = lts::parser_h264_container_e::NONE;
 
     static struct option long_options[] = {
         {"rtp",     no_argument,       0, 'r'},
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 
             case 'a':
                 encapsulation.annex_b = true;
-                container = ymn::parser_h264_container_e::ANNEX_B;
+                container = lts::parser_h264_container_e::ANNEX_B;
                 break;
 
             case 'o':
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 
         memblock = new char[READ_BUFFER_SIZE];
 
-        ymn::parser_h264 parser(PARSER_BUFFER_SIZE, container);
+        lts::parser_h264 parser(PARSER_BUFFER_SIZE, container);
 
         do {
             count = file.readsome(memblock, READ_BUFFER_SIZE);
@@ -203,81 +203,81 @@ int main(int argc, char *argv[])
 /*===========================================================================*\
  * local function definitions
 \*===========================================================================*/
-static void parser_h264_parse(ymn::parser_h264& parser)
+static void parser_h264_parse(lts::parser_h264& parser)
 {
-    ymn::parser_h264_status_e status;
+    lts::parser_h264_status_e status;
 
     do {
         status = parser.parse();
 
         switch (status) {
-            case ymn::parser_h264_status_e::NAL_UNIT_SKIPPED:
+            case lts::parser_h264_status_e::NAL_UNIT_SKIPPED:
                 break;
 
-            case ymn::parser_h264_status_e::NAL_UNIT_CORRUPTED:
+            case lts::parser_h264_status_e::NAL_UNIT_CORRUPTED:
                 break;
 
-            case ymn::parser_h264_status_e::AUD_PARSED:
+            case lts::parser_h264_status_e::AUD_PARSED:
             {
-                const ymn::h264_structure* structure = parser.get_structure(
-                        ymn::parser_h264_structure_e::AUD,
+                const lts::h264_structure* structure = parser.get_structure(
+                        lts::parser_h264_structure_e::AUD,
                         H264_PARSER_STRUCTURE_ID_RECENT);
                 if (structure)
                     std::cout << structure->to_string() << std::endl;
                 else
-                    std::cout << "Parser returned '" << ymn::to_string(status) <<
+                    std::cout << "Parser returned '" << lts::to_string(status) <<
                         "' but associated structure cannot be retrived" << std::endl;
                 break;
             }
 
-            case ymn::parser_h264_status_e::SPS_PARSED:
+            case lts::parser_h264_status_e::SPS_PARSED:
             {
-                const ymn::h264_structure* structure = parser.get_structure(
-                        ymn::parser_h264_structure_e::SPS,
+                const lts::h264_structure* structure = parser.get_structure(
+                        lts::parser_h264_structure_e::SPS,
                         H264_PARSER_STRUCTURE_ID_RECENT);
                 if (structure)
                     std::cout << structure->to_string() << std::endl;
                 else
-                    std::cout << "Parser returned '" << ymn::to_string(status) <<
+                    std::cout << "Parser returned '" << lts::to_string(status) <<
                         "' but associated structure cannot be retrived" << std::endl;
                 break;
             }
 
-            case ymn::parser_h264_status_e::PPS_PARSED:
+            case lts::parser_h264_status_e::PPS_PARSED:
             {
-                const ymn::h264_structure* structure = parser.get_structure(
-                        ymn::parser_h264_structure_e::PPS,
+                const lts::h264_structure* structure = parser.get_structure(
+                        lts::parser_h264_structure_e::PPS,
                         H264_PARSER_STRUCTURE_ID_RECENT);
                 if (structure)
                     std::cout << structure->to_string() << std::endl;
                 else
-                    std::cout << "Parser returned '" << ymn::to_string(status) <<
+                    std::cout << "Parser returned '" << lts::to_string(status) <<
                         "' but associated structure cannot be retrived" << std::endl;
                 break;
             }
 
-            case ymn::parser_h264_status_e::SEI_PARSED:
+            case lts::parser_h264_status_e::SEI_PARSED:
             {
-                const ymn::h264_structure* structure = parser.get_structure(
-                        ymn::parser_h264_structure_e::SEI,
+                const lts::h264_structure* structure = parser.get_structure(
+                        lts::parser_h264_structure_e::SEI,
                         H264_PARSER_STRUCTURE_ID_RECENT);
                 if (structure)
                     std::cout << structure->to_string() << std::endl;
                 else
-                    std::cout << "Parser returned '" << ymn::to_string(status) <<
+                    std::cout << "Parser returned '" << lts::to_string(status) <<
                         "' but associated structure cannot be retrived" << std::endl;
                 break;
             }
 
-            case ymn::parser_h264_status_e::SLICE_PARSED:
+            case lts::parser_h264_status_e::SLICE_PARSED:
             {
-                const ymn::h264_structure* structure = parser.get_structure(
-                        ymn::parser_h264_structure_e::SLICE_HEADER,
+                const lts::h264_structure* structure = parser.get_structure(
+                        lts::parser_h264_structure_e::SLICE_HEADER,
                         H264_PARSER_STRUCTURE_ID_RECENT);
                 if (structure)
                     std::cout << structure->to_string() << std::endl;
                 else
-                    std::cout << "Parser returned '" << ymn::to_string(status) <<
+                    std::cout << "Parser returned '" << lts::to_string(status) <<
                         "' but associated structure cannot be retrived" << std::endl;
                 break;
             }
@@ -285,10 +285,10 @@ static void parser_h264_parse(ymn::parser_h264& parser)
             default:
                 break;
        }
-    } while (status != ymn::parser_h264_status_e::NEED_BYTES);
+    } while (status != lts::parser_h264_status_e::NEED_BYTES);
 }
 
-static void parser_h264_feed(ymn::parser_h264& parser, const uint8_t* data, std::size_t count)
+static void parser_h264_feed(lts::parser_h264& parser, const uint8_t* data, std::size_t count)
 {
     std::size_t n_written;
 

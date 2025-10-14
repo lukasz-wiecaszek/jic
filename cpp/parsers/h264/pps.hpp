@@ -43,7 +43,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -114,12 +114,12 @@ private:
 };
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
@@ -190,28 +190,28 @@ inline std::string pps::to_string() const
 }
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 namespace h264
 {
 
 } /* end of namespace h264 */
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _PPS_HPP_ */

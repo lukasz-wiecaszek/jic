@@ -228,7 +228,7 @@ iostatus tcpclient::worker(int sockfd)
         if (!status.has_value())
             return status;
 
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         status = read(sockfd, buffer);
         if (!status.has_value())
@@ -239,7 +239,7 @@ iostatus tcpclient::worker(int sockfd)
             std::size_t len;
             line = buffer.getline(&len);
             if (line) {
-                //fprintf(stdout, "%s\n", line);
+                fprintf(stdout, "%s\n", line);
                 if (std::memcmp(line, prefix.c_str(), prefix.size()) != 0)
                     return std::unexpected{EBADMSG};
                 switch (line_cnt % 3) {

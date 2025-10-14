@@ -47,7 +47,7 @@ takes the constant expression branch. */
 TEST(ringbuffer, 1in_1out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLOCKING_MODE)  \
 {                                                                                            \
     {                                                                                        \
-        ymn::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
+        lts::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
                                                                                              \
         std::thread producer {producer_1element<decltype(rb)>, std::ref(rb)};                \
         std::thread consumer {consumer_1element<decltype(rb)>, std::ref(rb)};                \
@@ -58,7 +58,7 @@ TEST(ringbuffer, 1in_1out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLO
         std::cout << static_cast<std::string>(rb) << std::endl;                              \
     }                                                                                        \
     {                                                                                        \
-        ymn::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
+        lts::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
                                                                                              \
         std::thread producer {producer_Nelements<decltype(rb), 1>, std::ref(rb)};            \
         std::thread consumer {consumer_Nelements<decltype(rb), 1>, std::ref(rb)};            \
@@ -69,7 +69,7 @@ TEST(ringbuffer, 1in_1out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLO
         std::cout << static_cast<std::string>(rb) << std::endl;                              \
     }                                                                                        \
     {                                                                                        \
-        ymn::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
+        lts::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
                                                                                              \
         std::thread producer {producer_function<decltype(rb), 1>, std::ref(rb)};             \
         std::thread consumer {consumer_function<decltype(rb), 1>, std::ref(rb)};             \
@@ -85,7 +85,7 @@ TEST(ringbuffer, 1in_1out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLO
 TEST(ringbuffer, 7in_11out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BLOCKING_MODE) \
 {                                                                                            \
     {                                                                                        \
-        ymn::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
+        lts::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
                                                                                              \
         std::thread producer {producer_Nelements<decltype(rb),  7>, std::ref(rb)};           \
         std::thread consumer {consumer_Nelements<decltype(rb), 11>, std::ref(rb)};           \
@@ -96,7 +96,7 @@ TEST(ringbuffer, 7in_11out_type_##TYPE##_capacity_##CAPACITY##_non_blocking_##BL
         std::cout << static_cast<std::string>(rb) << std::endl;                              \
     }                                                                                        \
     {                                                                                        \
-        ymn::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
+        lts::ringbuffer<TYPE> rb(CAPACITY, BLOCKING_MODE);                                   \
                                                                                              \
         std::thread producer {producer_function<decltype(rb),  7>, std::ref(rb)};            \
         std::thread consumer {consumer_function<decltype(rb), 11>, std::ref(rb)};            \
@@ -206,8 +206,8 @@ namespace
 TEST(ringbuffer, create_on_stack_primitive_type)
 {
     const size_t capacity = 1;
-    ymn::ringbuffer<size_t> rb1(capacity, true);
-    ymn::ringbuffer<size_t> rb2(capacity, false);
+    lts::ringbuffer<size_t> rb1(capacity, true);
+    lts::ringbuffer<size_t> rb2(capacity, false);
 
     EXPECT_EQ(capacity, rb1.capacity());
     EXPECT_EQ(capacity, rb2.capacity());
@@ -223,8 +223,8 @@ TEST(ringbuffer, create_on_stack_class_type)
 {
     const size_t capacity = 1;
 
-    ymn::ringbuffer<rb_element> rb1(capacity, true);
-    ymn::ringbuffer<rb_element> rb2(capacity, false);
+    lts::ringbuffer<rb_element> rb1(capacity, true);
+    lts::ringbuffer<rb_element> rb2(capacity, false);
 
     EXPECT_EQ(capacity, rb1.capacity());
     EXPECT_EQ(capacity, rb2.capacity());
@@ -240,8 +240,8 @@ TEST(ringbuffer, create_on_heap_primitive_type)
 {
     const size_t capacity = 1;
 
-    ymn::ringbuffer<size_t> *rb1 = new ymn::ringbuffer<size_t>(capacity, true);
-    ymn::ringbuffer<size_t> *rb2 = new ymn::ringbuffer<size_t>(capacity, false);
+    lts::ringbuffer<size_t> *rb1 = new lts::ringbuffer<size_t>(capacity, true);
+    lts::ringbuffer<size_t> *rb2 = new lts::ringbuffer<size_t>(capacity, false);
 
     EXPECT_EQ(capacity, rb1->capacity());
     EXPECT_EQ(capacity, rb2->capacity());
@@ -260,8 +260,8 @@ TEST(ringbuffer, create_on_heap_class_type)
 {
     const size_t capacity = 1;
 
-    ymn::ringbuffer<rb_element> *rb1 = new ymn::ringbuffer<rb_element>(capacity, true);
-    ymn::ringbuffer<rb_element> *rb2 = new ymn::ringbuffer<rb_element>(capacity, false);
+    lts::ringbuffer<rb_element> *rb1 = new lts::ringbuffer<rb_element>(capacity, true);
+    lts::ringbuffer<rb_element> *rb2 = new lts::ringbuffer<rb_element>(capacity, false);
 
     EXPECT_EQ(capacity, rb1->capacity());
     EXPECT_EQ(capacity, rb2->capacity());
@@ -335,7 +335,7 @@ static void producer_1element(RB& rb)
         element = produced;
         status = rb.write(element);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -370,7 +370,7 @@ static void consumer_1element(RB& rb)
         element = -1;
         status = rb.read(element);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -411,7 +411,7 @@ static void producer_Nelements(RB& rb)
             array[j] = produced + j;
         status = rb.write(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -442,7 +442,7 @@ static void consumer_Nelements(RB& rb)
         memset(array, 0, sizeof(array));
         status = rb.read(array);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -480,7 +480,7 @@ static void producer_function(RB& rb)
             return true;
         }, N);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }
@@ -515,7 +515,7 @@ static void consumer_function(RB& rb)
             }
         }, N);
         if (status < 0) {
-            if (static_cast<long>(ymn::ringbuffer_status::WOULD_BLOCK) == status) {
+            if (static_cast<long>(lts::ringbuffer_status::WOULD_BLOCK) == status) {
                 wouldblock_cnt++;
                 continue;
             }

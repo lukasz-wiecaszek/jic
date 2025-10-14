@@ -33,7 +33,7 @@
 
 #if !defined(USE_STD_SHARED_PTR)
 #include "shared_ptr.hpp"
-using namespace ymn;
+using namespace lts;
 #else
 #include <memory>
 using namespace std;

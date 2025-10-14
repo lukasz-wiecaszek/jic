@@ -70,14 +70,14 @@ namespace
 
 TEST(endianness, is_endianness_detection_constexpr)
 {
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::get_cpu_endianness()));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::get_cpu_endianness()));
 }
 
 TEST(endianness, is_swap_constexpr_1)
 {
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap((uint16_t)42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap((uint32_t)42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap((uint64_t)42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap((uint16_t)42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap((uint32_t)42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap((uint64_t)42)));
 }
 
 TEST(endianness, is_swap_constexpr_2)
@@ -86,9 +86,9 @@ TEST(endianness, is_swap_constexpr_2)
     const uint32_t value2 = 42;
     const uint64_t value3 = 42;
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap(value1)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap(value2)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::swap(value3)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap(value1)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap(value2)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::swap(value3)));
 }
 
 TEST(endianness, is_swap_constexpr_3)
@@ -97,27 +97,27 @@ TEST(endianness, is_swap_constexpr_3)
     uint32_t value2 = 42;
     uint64_t value3 = 42;
 
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::swap(value1)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::swap(value2)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::swap(value3)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::swap(value1)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::swap(value2)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::swap(value3)));
 }
 
 TEST(endianness, is_conversion_constexpr_1)
 {
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe16(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole16(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be16tocpu(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le16tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe16(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole16(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be16tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le16tocpu(42)));
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe32(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole32(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be32tocpu(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le32tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe32(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole32(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be32tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le32tocpu(42)));
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe64(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole64(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be64tocpu(42)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le64tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe64(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole64(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be64tocpu(42)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le64tocpu(42)));
 }
 
 TEST(endianness, is_conversion_constexpr_2)
@@ -126,20 +126,20 @@ TEST(endianness, is_conversion_constexpr_2)
     const uint32_t value2 = 42;
     const uint64_t value3 = 42;
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe16(value1)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole16(value1)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be16tocpu(value1)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le16tocpu(value1)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe16(value1)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole16(value1)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be16tocpu(value1)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le16tocpu(value1)));
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe32(value2)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole32(value2)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be32tocpu(value2)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le32tocpu(value2)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe32(value2)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole32(value2)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be32tocpu(value2)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le32tocpu(value2)));
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputobe64(value3)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::cputole64(value3)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::be64tocpu(value3)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::le64tocpu(value3)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputobe64(value3)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::cputole64(value3)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::be64tocpu(value3)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::le64tocpu(value3)));
 }
 
 TEST(endianness, is_conversion_constexpr_3)
@@ -148,128 +148,128 @@ TEST(endianness, is_conversion_constexpr_3)
     uint32_t value2 = 42;
     uint64_t value3 = 42;
 
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputobe16(value1)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputole16(value1)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::be16tocpu(value1)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::le16tocpu(value1)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputobe16(value1)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputole16(value1)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::be16tocpu(value1)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::le16tocpu(value1)));
 
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputobe32(value2)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputole32(value2)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::be32tocpu(value2)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::le32tocpu(value2)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputobe32(value2)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputole32(value2)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::be32tocpu(value2)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::le32tocpu(value2)));
 
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputobe64(value3)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::cputole64(value3)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::be64tocpu(value3)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::le64tocpu(value3)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputobe64(value3)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::cputole64(value3)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::be64tocpu(value3)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::le64tocpu(value3)));
 }
 
 TEST(endianness, swap)
 {
-    EXPECT_EQ(0x1234U, ymn::swap((uint16_t)0x3412U));
-    EXPECT_EQ(0x3412U, ymn::swap((uint16_t)0x1234U));
+    EXPECT_EQ(0x1234U, lts::swap((uint16_t)0x3412U));
+    EXPECT_EQ(0x3412U, lts::swap((uint16_t)0x1234U));
 
-    EXPECT_EQ(0x12345678U, ymn::swap((uint32_t)0x78563412U));
-    EXPECT_EQ(0x78563412U, ymn::swap((uint32_t)0x12345678U));
+    EXPECT_EQ(0x12345678U, lts::swap((uint32_t)0x78563412U));
+    EXPECT_EQ(0x78563412U, lts::swap((uint32_t)0x12345678U));
 
-    EXPECT_EQ(0x1234567890ABCDEFULL, ymn::swap((uint64_t)0xEFCDAB9078563412ULL));
-    EXPECT_EQ(0xEFCDAB9078563412ULL, ymn::swap((uint64_t)0x1234567890ABCDEFULL));
+    EXPECT_EQ(0x1234567890ABCDEFULL, lts::swap((uint64_t)0xEFCDAB9078563412ULL));
+    EXPECT_EQ(0xEFCDAB9078563412ULL, lts::swap((uint64_t)0x1234567890ABCDEFULL));
 }
 
 TEST(endianness, cputobe16)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234U, ymn::cputobe16(0x1234U));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234U, lts::cputobe16(0x1234U));
     else
-        EXPECT_EQ(0x3412U, ymn::cputobe16(0x1234U));
+        EXPECT_EQ(0x3412U, lts::cputobe16(0x1234U));
 }
 
 TEST(endianness, cputole16)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234U, ymn::cputole16(0x1234U));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234U, lts::cputole16(0x1234U));
     else
-        EXPECT_EQ(0x3412U, ymn::cputole16(0x1234U));
+        EXPECT_EQ(0x3412U, lts::cputole16(0x1234U));
 }
 
 TEST(endianness, be16tocpu)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234U, ymn::be16tocpu(0x1234U));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234U, lts::be16tocpu(0x1234U));
     else
-        EXPECT_EQ(0x3412U, ymn::be16tocpu(0x1234U));
+        EXPECT_EQ(0x3412U, lts::be16tocpu(0x1234U));
 }
 
 TEST(endianness, le16tocpu)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234U, ymn::le16tocpu(0x1234U));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234U, lts::le16tocpu(0x1234U));
     else
-        EXPECT_EQ(0x3412U, ymn::le16tocpu(0x1234U));
+        EXPECT_EQ(0x3412U, lts::le16tocpu(0x1234U));
 }
 
 TEST(endianness, cputobe32)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x12345678U, ymn::cputobe32(0x12345678U));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x12345678U, lts::cputobe32(0x12345678U));
     else
-        EXPECT_EQ(0x78563412U, ymn::cputobe32(0x12345678U));
+        EXPECT_EQ(0x78563412U, lts::cputobe32(0x12345678U));
 }
 
 TEST(endianness, cputole32)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x12345678U, ymn::cputole32(0x12345678U));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x12345678U, lts::cputole32(0x12345678U));
     else
-        EXPECT_EQ(0x78563412U, ymn::cputole32(0x12345678U));
+        EXPECT_EQ(0x78563412U, lts::cputole32(0x12345678U));
 }
 
 TEST(endianness, be32tocpu)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x12345678U, ymn::be32tocpu(0x12345678U));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x12345678U, lts::be32tocpu(0x12345678U));
     else
-        EXPECT_EQ(0x78563412U, ymn::be32tocpu(0x12345678U));
+        EXPECT_EQ(0x78563412U, lts::be32tocpu(0x12345678U));
 }
 
 TEST(endianness, le32tocpu)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x12345678U, ymn::le32tocpu(0x12345678U));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x12345678U, lts::le32tocpu(0x12345678U));
     else
-        EXPECT_EQ(0x78563412U, ymn::le32tocpu(0x12345678U));
+        EXPECT_EQ(0x78563412U, lts::le32tocpu(0x12345678U));
 }
 
 TEST(endianness, cputobe64)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234567890ABCDEFULL, ymn::cputobe64(0x1234567890ABCDEFULL));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234567890ABCDEFULL, lts::cputobe64(0x1234567890ABCDEFULL));
     else
-        EXPECT_EQ(0xEFCDAB9078563412ULL, ymn::cputobe64(0x1234567890ABCDEFULL));
+        EXPECT_EQ(0xEFCDAB9078563412ULL, lts::cputobe64(0x1234567890ABCDEFULL));
 }
 
 TEST(endianness, cputole64)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234567890ABCDEFULL, ymn::cputole64(0x1234567890ABCDEFULL));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234567890ABCDEFULL, lts::cputole64(0x1234567890ABCDEFULL));
     else
-        EXPECT_EQ(0xEFCDAB9078563412ULL, ymn::cputole64(0x1234567890ABCDEFULL));
+        EXPECT_EQ(0xEFCDAB9078563412ULL, lts::cputole64(0x1234567890ABCDEFULL));
 }
 
 TEST(endianness, be64tocpu)
 {
-    if (CPU_BIG_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234567890ABCDEFULL, ymn::be64tocpu(0x1234567890ABCDEFULL));
+    if (CPU_BIG_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234567890ABCDEFULL, lts::be64tocpu(0x1234567890ABCDEFULL));
     else
-        EXPECT_EQ(0xEFCDAB9078563412ULL, ymn::be64tocpu(0x1234567890ABCDEFULL));
+        EXPECT_EQ(0xEFCDAB9078563412ULL, lts::be64tocpu(0x1234567890ABCDEFULL));
 }
 
 TEST(endianness, le64tocpu)
 {
-    if (CPU_LITTLE_ENDIAN == ymn::get_cpu_endianness())
-        EXPECT_EQ(0x1234567890ABCDEFULL, ymn::le64tocpu(0x1234567890ABCDEFULL));
+    if (CPU_LITTLE_ENDIAN == lts::get_cpu_endianness())
+        EXPECT_EQ(0x1234567890ABCDEFULL, lts::le64tocpu(0x1234567890ABCDEFULL));
     else
-        EXPECT_EQ(0xEFCDAB9078563412ULL, ymn::le64tocpu(0x1234567890ABCDEFULL));
+        EXPECT_EQ(0xEFCDAB9078563412ULL, lts::le64tocpu(0x1234567890ABCDEFULL));
 }
 
 } // end of anonymous namespace

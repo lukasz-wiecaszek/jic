@@ -65,7 +65,7 @@ namespace
 
 TEST(istream_position, create_1_onstack)
 {
-    ymn::istream_position stream_position = ymn::istream_position();
+    lts::istream_position stream_position = lts::istream_position();
 
     EXPECT_EQ(0, stream_position.m_byte_position);
     EXPECT_EQ(0, stream_position.m_bit_position);
@@ -75,7 +75,7 @@ TEST(istream_position, create_1_onstack)
 
 TEST(istream_position, create_1_onheap)
 {
-    ymn::istream_position* stream_position = new ymn::istream_position();
+    lts::istream_position* stream_position = new lts::istream_position();
 
     EXPECT_EQ(0, stream_position->m_byte_position);
     EXPECT_EQ(0, stream_position->m_bit_position);
@@ -87,7 +87,7 @@ TEST(istream_position, create_1_onheap)
 
 TEST(istream_position, create_2)
 {
-    ymn::istream_position stream_position = ymn::istream_position(42);
+    lts::istream_position stream_position = lts::istream_position(42);
 
     EXPECT_EQ(42, stream_position.m_byte_position);
     EXPECT_EQ(0, stream_position.m_bit_position);
@@ -97,7 +97,7 @@ TEST(istream_position, create_2)
 
 TEST(istream_position, create_3)
 {
-    ymn::istream_position stream_position = ymn::istream_position(42, 24);
+    lts::istream_position stream_position = lts::istream_position(42, 24);
 
     EXPECT_EQ(42, stream_position.m_byte_position);
     EXPECT_EQ(24, stream_position.m_bit_position);

@@ -69,11 +69,11 @@ namespace
 
 TEST(binary_semaphore, create_on_stack)
 {
-    ymn::binary_semaphore sem(false);
+    lts::binary_semaphore sem(false);
 
     ASSERT_EQ(false, sem.get_value());
 
-    std::thread t1 {[](ymn::binary_semaphore* sem){
+    std::thread t1 {[](lts::binary_semaphore* sem){
         sem->post();
         sem->wait();
         sem->post();
@@ -81,7 +81,7 @@ TEST(binary_semaphore, create_on_stack)
         sem->post();
     }, &sem};
 
-    std::thread t2 {[](ymn::binary_semaphore& sem){
+    std::thread t2 {[](lts::binary_semaphore& sem){
         sem.wait();
         sem.post();
         sem.wait_timeout(WAIT_TIMEOUT_MSEC);
@@ -95,11 +95,11 @@ TEST(binary_semaphore, create_on_stack)
 
 TEST(binary_semaphore, create_on_heap)
 {
-    ymn::binary_semaphore *sem = new (std::nothrow) ymn::binary_semaphore(false);
+    lts::binary_semaphore *sem = new (std::nothrow) lts::binary_semaphore(false);
 
     ASSERT_EQ(false, sem->get_value());
 
-    std::thread t1 {[](ymn::binary_semaphore* sem){
+    std::thread t1 {[](lts::binary_semaphore* sem){
         sem->post();
         sem->wait();
         sem->post();
@@ -107,7 +107,7 @@ TEST(binary_semaphore, create_on_heap)
         sem->post();
     }, sem};
 
-    std::thread t2 {[](ymn::binary_semaphore& sem){
+    std::thread t2 {[](lts::binary_semaphore& sem){
         sem.wait();
         sem.post();
         sem.wait_timeout(WAIT_TIMEOUT_MSEC);
@@ -123,11 +123,11 @@ TEST(binary_semaphore, create_on_heap)
 
 TEST(binary_semaphore, wait_interrupted)
 {
-    ymn::binary_semaphore sem(false);
+    lts::binary_semaphore sem(false);
 
     ASSERT_EQ(false, sem.get_value());
 
-    std::thread t1 {[](ymn::binary_semaphore* sem){
+    std::thread t1 {[](lts::binary_semaphore* sem){
         std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_TIMEOUT_MSEC / 2));
         sem->post();
     }, &sem};
@@ -139,11 +139,11 @@ TEST(binary_semaphore, wait_interrupted)
 
 TEST(binary_semaphore, wait_timeout_interrupted)
 {
-    ymn::binary_semaphore sem(false);
+    lts::binary_semaphore sem(false);
 
     ASSERT_EQ(false, sem.get_value());
 
-    std::thread t1 {[](ymn::binary_semaphore* sem){
+    std::thread t1 {[](lts::binary_semaphore* sem){
         std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_TIMEOUT_MSEC / 2));
         sem->post();
     }, &sem};
@@ -155,7 +155,7 @@ TEST(binary_semaphore, wait_timeout_interrupted)
 
 TEST(binary_semaphore, wait_timeout)
 {
-    ymn::binary_semaphore sem(false);
+    lts::binary_semaphore sem(false);
 
     ASSERT_EQ(false, sem.get_value());
 

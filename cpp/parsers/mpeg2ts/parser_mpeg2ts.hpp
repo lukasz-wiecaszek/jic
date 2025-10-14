@@ -4,7 +4,7 @@
  * Definition of MPEG2 Transport Stream (ISO/IEC 13818-1) parser.
  *
  * MPEG2 Transport Stream syntax and semantics is defined in ISO/IEC 13818-1
- * "Information technology — Generic coding of moving pictures and associated
+ * "Information technology ï¿½ Generic coding of moving pictures and associated
  * audio information: Systems".
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
@@ -58,7 +58,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 enum class parser_mpeg2ts_status_e : int32_t
@@ -203,12 +203,12 @@ private:
     transport_rate m_transport_rate;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 inline mpeg2ts_pid parser_mpeg2ts_get_pid(const uint8_t* tsp)
@@ -242,22 +242,22 @@ constexpr const char* to_string(parser_mpeg2ts_status_e e)
     return str;
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _PARSER_MPEG2TS_HPP_ */

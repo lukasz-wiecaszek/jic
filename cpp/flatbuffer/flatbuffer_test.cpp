@@ -76,14 +76,14 @@ TEST(flatbuffer, capacity)
 
     {
         capacity = 42;
-        ymn::flatbuffer<int> fb(capacity);
+        lts::flatbuffer<int> fb(capacity);
         ASSERT_TRUE(fb.is_valid());
         EXPECT_EQ(capacity, fb.capacity());
     }
 
     {
         capacity = 0;
-        ymn::flatbuffer<int> fb(capacity);
+        lts::flatbuffer<int> fb(capacity);
         ASSERT_FALSE(fb.is_valid());
         EXPECT_EQ(capacity, fb.capacity());
     }
@@ -94,7 +94,7 @@ TEST(flatbuffer, initial_values)
     std::size_t capacity;
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_EQ(capacity, fb.write_available());
@@ -114,7 +114,7 @@ TEST(flatbuffer, write_element)
     int element = 0;
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_EQ(1, fb.write(0));
@@ -135,7 +135,7 @@ TEST(flatbuffer, write_array)
     int array[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_EQ(10, fb.write(array));
@@ -165,7 +165,7 @@ TEST(flatbuffer, write_and_consume)
     int array[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     {
@@ -308,7 +308,7 @@ TEST(flatbuffer, read_ptr)
     const int* p;
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_TRUE(nullptr != (p = fb.read_ptr()));
@@ -350,7 +350,7 @@ TEST(flatbuffer, bookmark)
     const int* b;
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_TRUE(nullptr != (p = fb.read_ptr()));
@@ -413,7 +413,7 @@ TEST(flatbuffer, move)
     const int* b;
 
     capacity = 42;
-    ymn::flatbuffer<int> fb(capacity);
+    lts::flatbuffer<int> fb(capacity);
     ASSERT_TRUE(fb.is_valid());
 
     EXPECT_TRUE(nullptr != (p = fb.read_ptr()));

@@ -4,7 +4,7 @@
  * Definition of H.264 (ISO/IEC 14496-10) parser.
  *
  * H.264 syntax and semantics is defined in ISO/IEC 14496-10
- * "Information technology — Coding of audio-visual objects —
+ * "Information technology ï¿½ Coding of audio-visual objects ï¿½
  * Part 10: Advanced Video Coding"
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
@@ -79,7 +79,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 enum class parser_h264_container_e : int32_t
@@ -257,12 +257,12 @@ private:
     h264::slice_header m_slice_header;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 constexpr const char* to_string(parser_h264_container_e e)
@@ -304,22 +304,22 @@ constexpr const char* to_string(parser_h264_structure_e e)
     return str;
 }
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _PARSER_H264_HPP_ */

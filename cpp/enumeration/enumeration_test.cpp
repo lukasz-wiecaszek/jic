@@ -70,49 +70,49 @@ namespace
 
 TEST(enumeration, is_constructor_constexpr_1)
 {
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(ymn::card_colour_e::HEARTS)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(ymn::card_colour_e::DIAMONDS)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(ymn::card_colour_e::CLUBS)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(ymn::card_colour_e::SPADES)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(lts::card_colour_e::HEARTS)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(lts::card_colour_e::DIAMONDS)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(lts::card_colour_e::CLUBS)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(lts::card_colour_e::SPADES)));
 }
 
 TEST(enumeration, is_constructor_constexpr_2)
 {
-    const ymn::card_colour_e hearts = ymn::card_colour_e::HEARTS;
-    const ymn::card_colour_e diamonds = ymn::card_colour_e::DIAMONDS;
-    constexpr ymn::card_colour_e clubs = ymn::card_colour_e::CLUBS;
-    constexpr ymn::card_colour_e spades = ymn::card_colour_e::SPADES;
+    const lts::card_colour_e hearts = lts::card_colour_e::HEARTS;
+    const lts::card_colour_e diamonds = lts::card_colour_e::DIAMONDS;
+    constexpr lts::card_colour_e clubs = lts::card_colour_e::CLUBS;
+    constexpr lts::card_colour_e spades = lts::card_colour_e::SPADES;
 
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(hearts)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(diamonds)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(clubs)));
-    EXPECT_TRUE(IS_CONSTEXPR(ymn::card_colour(spades)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(hearts)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(diamonds)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(clubs)));
+    EXPECT_TRUE(IS_CONSTEXPR(lts::card_colour(spades)));
 }
 
 TEST(enumeration, is_constructor_constexpr_3)
 {
-    ymn::card_colour_e hearts = ymn::card_colour_e::HEARTS;
-    ymn::card_colour_e diamonds = ymn::card_colour_e::DIAMONDS;
-    ymn::card_colour_e clubs = ymn::card_colour_e::CLUBS;
-    ymn::card_colour_e spades = ymn::card_colour_e::SPADES;
+    lts::card_colour_e hearts = lts::card_colour_e::HEARTS;
+    lts::card_colour_e diamonds = lts::card_colour_e::DIAMONDS;
+    lts::card_colour_e clubs = lts::card_colour_e::CLUBS;
+    lts::card_colour_e spades = lts::card_colour_e::SPADES;
 
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::card_colour(hearts)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::card_colour(diamonds)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::card_colour(clubs)));
-    EXPECT_FALSE(IS_CONSTEXPR(ymn::card_colour(spades)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::card_colour(hearts)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::card_colour(diamonds)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::card_colour(clubs)));
+    EXPECT_FALSE(IS_CONSTEXPR(lts::card_colour(spades)));
 }
 
 TEST(enumeration, are_cast_operators_constexpr)
 {
-    constexpr ymn::card_colour hearts = ymn::card_colour_e::HEARTS;
+    constexpr lts::card_colour hearts = lts::card_colour_e::HEARTS;
 
-    EXPECT_TRUE(IS_CONSTEXPR(hearts.operator const ymn::card_colour_e()));
-    EXPECT_TRUE(IS_CONSTEXPR(hearts.operator const typename std::underlying_type<ymn::card_colour_e>::type()));
+    EXPECT_TRUE(IS_CONSTEXPR(hearts.operator const lts::card_colour_e()));
+    EXPECT_TRUE(IS_CONSTEXPR(hearts.operator const typename std::underlying_type<lts::card_colour_e>::type()));
 }
 
 TEST(enumeration, are_comparition_operators_constexpr)
 {
-    constexpr ymn::card_colour hearts = ymn::card_colour_e::HEARTS;
+    constexpr lts::card_colour hearts = lts::card_colour_e::HEARTS;
 
     EXPECT_TRUE(IS_CONSTEXPR(hearts.operator == (hearts)));
     EXPECT_TRUE(IS_CONSTEXPR(hearts.operator != (hearts)));
@@ -124,28 +124,28 @@ TEST(enumeration, are_comparition_operators_constexpr)
 
 TEST(enumeration, create_on_stack)
 {
-    const ymn::card_colour hearts = ymn::card_colour_e::HEARTS;
-    const ymn::card_colour diamonds = ymn::card_colour_e::DIAMONDS;
-    const ymn::card_colour clubs = ymn::card_colour_e::CLUBS;
-    const ymn::card_colour spades = ymn::card_colour_e::SPADES;
+    const lts::card_colour hearts = lts::card_colour_e::HEARTS;
+    const lts::card_colour diamonds = lts::card_colour_e::DIAMONDS;
+    const lts::card_colour clubs = lts::card_colour_e::CLUBS;
+    const lts::card_colour spades = lts::card_colour_e::SPADES;
 
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::HEARTS), ymn::to_string(hearts));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::DIAMONDS), ymn::to_string(diamonds));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::CLUBS), ymn::to_string(clubs));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::SPADES), ymn::to_string(spades));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::HEARTS), lts::to_string(hearts));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::DIAMONDS), lts::to_string(diamonds));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::CLUBS), lts::to_string(clubs));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::SPADES), lts::to_string(spades));
 }
 
 TEST(enumeration, create_on_heap)
 {
-    const ymn::card_colour* hearts = new ymn::card_colour(ymn::card_colour_e::HEARTS);
-    const ymn::card_colour* diamonds = new ymn::card_colour(ymn::card_colour_e::DIAMONDS);
-    const ymn::card_colour* clubs = new ymn::card_colour(ymn::card_colour_e::CLUBS);
-    const ymn::card_colour* spades = new ymn::card_colour(ymn::card_colour_e::SPADES);
+    const lts::card_colour* hearts = new lts::card_colour(lts::card_colour_e::HEARTS);
+    const lts::card_colour* diamonds = new lts::card_colour(lts::card_colour_e::DIAMONDS);
+    const lts::card_colour* clubs = new lts::card_colour(lts::card_colour_e::CLUBS);
+    const lts::card_colour* spades = new lts::card_colour(lts::card_colour_e::SPADES);
 
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::HEARTS), ymn::to_string(*hearts));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::DIAMONDS), ymn::to_string(*diamonds));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::CLUBS), ymn::to_string(*clubs));
-    EXPECT_EQ(ymn::to_string(ymn::card_colour_e::SPADES), ymn::to_string(*spades));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::HEARTS), lts::to_string(*hearts));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::DIAMONDS), lts::to_string(*diamonds));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::CLUBS), lts::to_string(*clubs));
+    EXPECT_EQ(lts::to_string(lts::card_colour_e::SPADES), lts::to_string(*spades));
 
     delete hearts;
     delete diamonds;
@@ -155,29 +155,29 @@ TEST(enumeration, create_on_heap)
 
 TEST(enumeration, cast_operators)
 {
-    const ymn::card_colour hearts = ymn::card_colour_e::HEARTS;
-    EXPECT_EQ(ymn::card_colour_e::HEARTS, hearts);
+    const lts::card_colour hearts = lts::card_colour_e::HEARTS;
+    EXPECT_EQ(lts::card_colour_e::HEARTS, hearts);
     EXPECT_EQ(0, hearts);
 
-    const ymn::card_colour diamonds = ymn::card_colour_e::DIAMONDS;
-    EXPECT_EQ(ymn::card_colour_e::DIAMONDS, diamonds);
+    const lts::card_colour diamonds = lts::card_colour_e::DIAMONDS;
+    EXPECT_EQ(lts::card_colour_e::DIAMONDS, diamonds);
     EXPECT_EQ(1, diamonds);
 
-    const ymn::card_colour clubs = ymn::card_colour_e::CLUBS;
-    EXPECT_EQ(ymn::card_colour_e::CLUBS, clubs);
+    const lts::card_colour clubs = lts::card_colour_e::CLUBS;
+    EXPECT_EQ(lts::card_colour_e::CLUBS, clubs);
     EXPECT_EQ(2, clubs);
 
-    const ymn::card_colour spades = ymn::card_colour_e::SPADES;
-    EXPECT_EQ(ymn::card_colour_e::SPADES, spades);
+    const lts::card_colour spades = lts::card_colour_e::SPADES;
+    EXPECT_EQ(lts::card_colour_e::SPADES, spades);
     EXPECT_EQ(3, spades);
 }
 
 TEST(enumeration, comparition_operators)
 {
-    const ymn::card_colour hearts = ymn::card_colour_e::HEARTS;
-    const ymn::card_colour diamonds = ymn::card_colour_e::DIAMONDS;
-    const ymn::card_colour clubs = ymn::card_colour_e::CLUBS;
-    const ymn::card_colour spades = ymn::card_colour_e::SPADES;
+    const lts::card_colour hearts = lts::card_colour_e::HEARTS;
+    const lts::card_colour diamonds = lts::card_colour_e::DIAMONDS;
+    const lts::card_colour clubs = lts::card_colour_e::CLUBS;
+    const lts::card_colour spades = lts::card_colour_e::SPADES;
 
     EXPECT_TRUE(hearts == hearts);
     EXPECT_FALSE(hearts != hearts);

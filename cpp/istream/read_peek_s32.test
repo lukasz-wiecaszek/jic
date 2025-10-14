@@ -5,7 +5,7 @@ TEST(istream, read_s32_be)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     EXPECT_TRUE(stream_be.read_s32(value));
@@ -21,9 +21,9 @@ TEST(istream, read_s32_be)
     EXPECT_EQ(static_cast<int32_t>(0x8c8d8e8f), value);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(16, 0), before);
-            EXPECT_EQ(ymn::istream_position(20, 0), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(16, 0), before);
+            EXPECT_EQ(lts::istream_position(20, 0), after);
         }
     );
 
@@ -32,9 +32,9 @@ TEST(istream, read_s32_be)
     stream_be.skip_bits(1);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(16, 1), before);
-            EXPECT_EQ(ymn::istream_position(20, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(16, 1), before);
+            EXPECT_EQ(lts::istream_position(20, 1), after);
         }
     );
 
@@ -49,7 +49,7 @@ TEST(istream, read_s32_le)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     EXPECT_TRUE(stream_le.read_s32(value));
@@ -65,9 +65,9 @@ TEST(istream, read_s32_le)
     EXPECT_EQ(static_cast<int32_t>(0x8f8e8d8c), value);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(16, 0), before);
-            EXPECT_EQ(ymn::istream_position(20, 0), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(16, 0), before);
+            EXPECT_EQ(lts::istream_position(20, 0), after);
         }
     );
 
@@ -76,9 +76,9 @@ TEST(istream, read_s32_le)
     stream_le.skip_bits(1);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(16, 1), before);
-            EXPECT_EQ(ymn::istream_position(20, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(16, 1), before);
+            EXPECT_EQ(lts::istream_position(20, 1), after);
         }
     );
 
@@ -93,7 +93,7 @@ TEST(istream, peek_s32_be)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     EXPECT_TRUE(stream_be.peek_s32(value));
@@ -118,9 +118,9 @@ TEST(istream, peek_s32_be)
     stream_be.skip(1);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(13, 0), before);
-            EXPECT_EQ(ymn::istream_position(17, 0), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(13, 0), before);
+            EXPECT_EQ(lts::istream_position(17, 0), after);
         }
     );
 
@@ -129,9 +129,9 @@ TEST(istream, peek_s32_be)
     stream_be.skip_bits(1);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(13, 1), before);
-            EXPECT_EQ(ymn::istream_position(17, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(13, 1), before);
+            EXPECT_EQ(lts::istream_position(17, 1), after);
         }
     );
 
@@ -146,7 +146,7 @@ TEST(istream, peek_s32_le)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     EXPECT_TRUE(stream_le.peek_s32(value));
@@ -171,9 +171,9 @@ TEST(istream, peek_s32_le)
     stream_le.skip(1);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(13, 0), before);
-            EXPECT_EQ(ymn::istream_position(17, 0), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(13, 0), before);
+            EXPECT_EQ(lts::istream_position(17, 0), after);
         }
     );
 
@@ -182,9 +182,9 @@ TEST(istream, peek_s32_le)
     stream_le.skip_bits(1);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(13, 1), before);
-            EXPECT_EQ(ymn::istream_position(17, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(13, 1), before);
+            EXPECT_EQ(lts::istream_position(17, 1), after);
         }
     );
 

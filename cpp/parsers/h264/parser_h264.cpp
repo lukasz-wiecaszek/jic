@@ -30,7 +30,7 @@
 /*===========================================================================*\
  * 'using namespace' section
 \*===========================================================================*/
-using namespace ymn;
+using namespace lts;
 
 /*===========================================================================*\
  * preprocessor #define constants and macros
@@ -1211,7 +1211,7 @@ parser_h264_status_e parser_h264::parse_nal_unit(istream_be& s)
     nal_unit_type = nal_header & 0x1f;
 
     fprintf(stdout, ">>> nal_unit_type: %u '%s', stream size: %zu\n",
-        nal_unit_type, ymn::to_string(static_cast<nal_unit_type_e>(nal_unit_type)), s.size());
+        nal_unit_type, lts::to_string(static_cast<nal_unit_type_e>(nal_unit_type)), s.size());
 
     switch (static_cast<nal_unit_type_e>(nal_unit_type)) {
         case nal_unit_type_e::AUD:

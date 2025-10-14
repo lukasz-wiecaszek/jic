@@ -65,10 +65,10 @@ namespace
 
 TEST(istream, create_1_onstack)
 {
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(nullptr, 0);
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(nullptr, 0);
     EXPECT_FALSE(stream_be.is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(nullptr, 0);
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(nullptr, 0);
     EXPECT_FALSE(stream_le.is_valid());
 
     std::cout << (std::string)stream_be << std::endl;
@@ -77,12 +77,12 @@ TEST(istream, create_1_onstack)
 
 TEST(istream, create_1_onheap)
 {
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> *stream_be =
-        new ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN>(nullptr, 0);
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> *stream_be =
+        new lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN>(nullptr, 0);
     EXPECT_FALSE(stream_be->is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> *stream_le =
-        new ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN>(nullptr, 0);
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> *stream_le =
+        new lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN>(nullptr, 0);
     EXPECT_FALSE(stream_le->is_valid());
 
     std::cout << (std::string)*stream_be << std::endl;
@@ -97,10 +97,10 @@ TEST(istream, create_2)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     std::cout << (std::string)stream_be << std::endl;
@@ -112,16 +112,16 @@ TEST(istream, create_3)
     uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                         0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream1_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream1_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream1_be.is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream2_be(stream1_be);
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream2_be(stream1_be);
     EXPECT_TRUE(stream2_be.is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream1_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream1_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream1_le.is_valid());
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream2_le(stream1_le);
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream2_le(stream1_le);
     EXPECT_TRUE(stream2_le.is_valid());
 
     std::cout << (std::string)stream1_be << std::endl;
@@ -153,7 +153,7 @@ TEST(istream, read_bits_be)
     uint8_t buffer[] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55,
                         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     EXPECT_EQ(0, stream_be.tell());
@@ -185,9 +185,9 @@ TEST(istream, read_bits_be)
     READ_BITS_TEST(stream_be, 14, 14, 2, 0b01010101010101);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(14, 2), before);
-            EXPECT_EQ(ymn::istream_position(16, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(14, 2), before);
+            EXPECT_EQ(lts::istream_position(16, 1), after);
         }
     );
 
@@ -202,7 +202,7 @@ TEST(istream, read_bits_le)
     uint8_t buffer[] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55,
                         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     EXPECT_EQ(0, stream_le.tell());
@@ -234,9 +234,9 @@ TEST(istream, read_bits_le)
     READ_BITS_TEST(stream_le, 14, 14, 2, 0b01010101010101);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(14, 2), before);
-            EXPECT_EQ(ymn::istream_position(16, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(14, 2), before);
+            EXPECT_EQ(lts::istream_position(16, 1), after);
         }
     );
 
@@ -261,7 +261,7 @@ TEST(istream, peek_bits_be)
     uint8_t buffer[] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55,
                         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     EXPECT_EQ(0, stream_be.tell());
@@ -293,9 +293,9 @@ TEST(istream, peek_bits_be)
     PEEK_BITS_TEST(stream_be, 14, 14, 2, 0b01010101010101);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(14, 2), before);
-            EXPECT_EQ(ymn::istream_position(16, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(14, 2), before);
+            EXPECT_EQ(lts::istream_position(16, 1), after);
         }
     );
 
@@ -310,7 +310,7 @@ TEST(istream, peek_bits_le)
     uint8_t buffer[] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55,
                         0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     EXPECT_EQ(0, stream_le.tell());
@@ -342,9 +342,9 @@ TEST(istream, peek_bits_le)
     PEEK_BITS_TEST(stream_le, 14, 14, 2, 0b01010101010101);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(14, 2), before);
-            EXPECT_EQ(ymn::istream_position(16, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(14, 2), before);
+            EXPECT_EQ(lts::istream_position(16, 1), after);
         }
     );
 
@@ -365,7 +365,7 @@ TEST(istream, read_exp_golomb_u_be)
     uint32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     READ_EXP_GOLOMB_U_TEST(stream_be, 0, 1, 0);
@@ -380,9 +380,9 @@ TEST(istream, read_exp_golomb_u_be)
     READ_EXP_GOLOMB_U_TEST(stream_be, 6, 0, 9);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(6, 0), before);
-            EXPECT_EQ(ymn::istream_position(6, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(6, 0), before);
+            EXPECT_EQ(lts::istream_position(6, 1), after);
         }
     );
 
@@ -396,7 +396,7 @@ TEST(istream, read_exp_golomb_u_le)
     uint32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     READ_EXP_GOLOMB_U_TEST(stream_le, 0, 1, 0);
@@ -411,9 +411,9 @@ TEST(istream, read_exp_golomb_u_le)
     READ_EXP_GOLOMB_U_TEST(stream_le, 6, 0, 9);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(6, 0), before);
-            EXPECT_EQ(ymn::istream_position(6, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(6, 0), before);
+            EXPECT_EQ(lts::istream_position(6, 1), after);
         }
     );
 
@@ -433,7 +433,7 @@ TEST(istream, peek_exp_golomb_u_be)
     uint32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     PEEK_EXP_GOLOMB_U_TEST(stream_be, 1, 0);
@@ -455,7 +455,7 @@ TEST(istream, peek_exp_golomb_u_le)
     uint32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     PEEK_EXP_GOLOMB_U_TEST(stream_le, 1, 0);
@@ -485,7 +485,7 @@ TEST(istream, read_exp_golomb_s_be)
     int32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     READ_EXP_GOLOMB_S_TEST(stream_be, 0, 1,  0);
@@ -500,9 +500,9 @@ TEST(istream, read_exp_golomb_s_be)
     READ_EXP_GOLOMB_S_TEST(stream_be, 6, 0, +5);
 
     stream_be.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(6, 0), before);
-            EXPECT_EQ(ymn::istream_position(6, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(6, 0), before);
+            EXPECT_EQ(lts::istream_position(6, 1), after);
         }
     );
 
@@ -516,7 +516,7 @@ TEST(istream, read_exp_golomb_s_le)
     int32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     READ_EXP_GOLOMB_S_TEST(stream_le, 0, 1,  0);
@@ -531,9 +531,9 @@ TEST(istream, read_exp_golomb_s_le)
     READ_EXP_GOLOMB_S_TEST(stream_le, 6, 0, +5);
 
     stream_le.set_error_function(
-        [](const ymn::istream_position& before, const ymn::istream_position& after){
-            EXPECT_EQ(ymn::istream_position(6, 0), before);
-            EXPECT_EQ(ymn::istream_position(6, 1), after);
+        [](const lts::istream_position& before, const lts::istream_position& after){
+            EXPECT_EQ(lts::istream_position(6, 0), before);
+            EXPECT_EQ(lts::istream_position(6, 1), after);
         }
     );
 
@@ -553,7 +553,7 @@ TEST(istream, peek_exp_golomb_s_be)
     int32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_BIG_ENDIAN> stream_be(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_be.is_valid());
 
     PEEK_EXP_GOLOMB_S_TEST(stream_be, 1,  0);
@@ -575,7 +575,7 @@ TEST(istream, peek_exp_golomb_s_le)
     int32_t value;
     uint8_t buffer[] = {0xa6, 0x42, 0x98, 0xe2, 0x04, 0x8a};
 
-    ymn::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
+    lts::istream<STREAM_BYTE_ORDER_LITTLE_ENDIAN> stream_le(buffer, sizeof(buffer));
     EXPECT_TRUE(stream_le.is_valid());
 
     PEEK_EXP_GOLOMB_S_TEST(stream_le, 1,  0);

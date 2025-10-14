@@ -4,7 +4,7 @@
  * Definition of MPEG2 Transport Stream (ISO/IEC 13818-1) Packet ID type.
  *
  * MPEG2 Transport Stream syntax and semantics is defined in ISO/IEC 13818-1
- * "Information technology — Generic coding of moving pictures and associated
+ * "Information technology ï¿½ Generic coding of moving pictures and associated
  * audio information: Systems".
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
@@ -41,7 +41,7 @@
 /*===========================================================================*\
  * global type definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
 class mpeg2ts_pid
@@ -80,30 +80,30 @@ private:
     int m_pid;
 };
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * inline function/variable definitions
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * global object declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 /*===========================================================================*\
  * function forward declarations
 \*===========================================================================*/
-namespace ymn
+namespace lts
 {
 
-} /* end of namespace ymn */
+} /* end of namespace lts */
 
 #endif /* _MPEG2TS_PID_HPP_ */
