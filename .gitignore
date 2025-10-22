@@ -30,6 +30,10 @@
 
 # VSCODE
 .vscode/*
+*/.vscode/*
+*/*/.vscode/*
 
 # CMake build
 build/*
+*/build/*
+*/*/build/*
