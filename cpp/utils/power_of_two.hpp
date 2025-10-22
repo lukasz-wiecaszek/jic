@@ -1,18 +1,10 @@
+/* SPDX-License-Identifier: MIT */
 /**
  * @file power_of_two.hpp
  *
- * ...
+ * Utility function for checking if a number is a power of two.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU General Public License,
- * version 2, as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
  */
 
 #ifndef _POWER_OF_TWO_HPP_
@@ -21,6 +13,7 @@
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
+#include <cstddef>
 
 /*===========================================================================*\
  * project header files
@@ -46,7 +39,7 @@ namespace lts
 
 constexpr bool is_power_of_two(std::size_t x)
 {
-    return (0 == (x & (x - 1)));
+    return ((x & (x - 1)) == 0);
 }
 
 } /* end of namespace lts */

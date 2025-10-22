@@ -1,18 +1,10 @@
+/* SPDX-License-Identifier: MIT */
 /**
  * @file utilities.hpp
  *
- * Set of miscellaneous utility routines.
+ * Set of general purpose utility routines.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU General Public License,
- * version 2, as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
  */
 
 #ifndef _UTILITIES_HPP_
@@ -21,12 +13,14 @@
 /*===========================================================================*\
  * system header files
 \*===========================================================================*/
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <climits>
-#include <iomanip>
-#include <cerrno>
+#include <cstddef>
+#include <cstring>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <assert.h>
+
+#include <sys/socket.h>
 
 /*===========================================================================*\
  * project header files
@@ -35,36 +29,25 @@
 /*===========================================================================*\
  * preprocessor #define constants and macros
 \*===========================================================================*/
-#define UNUSED(expr) do {(void)(expr);} while(0)
+#ifndef likely
+#define likely(x) __builtin_expect(!!(x), 1)
+#endif
 
-#define TABLE_ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
+#ifndef unlikely
+#define unlikely(x) __builtin_expect(!!(x), 0)
+#endif
 
-#define CHK_EXPR(expr, ostream) chk_expr(#expr, expr, ostream)
+#define PIPE_READ_END  0
+#define PIPE_WRIRE_END 1
+#define INVALID_FD     (-1)
 
-#define CHK_MIN(item, min, ostream) \
-    chk_min(#item, item, min, ostream)
-
-#define CHK_STRUCT_MIN(struct, item, min, ostream) \
-    chk_min(#struct"."#item, struct.item, min, ostream)
-
-#define CHK_MAX(item, max, ostream) \
-    chk_max(#item, item, max, ostream)
-
-#define CHK_STRUCT_MAX(struct, item, max, ostream) \
-    chk_max(#struct"."#item, struct.item, max, ostream)
-
-#define CHK_RANGE(item, min, max, ostream) \
-    chk_range(#item, item, min, max, ostream)
-
-#define CHK_STRUCT_RANGE(struct, item, min, max, ostream) \
-    chk_range(#struct"."#item, struct.item, min, max, ostream)
+#define __might_be_unused __attribute__((unused))
 
 /*===========================================================================*\
- * global type definitions
+ * global types definitions
 \*===========================================================================*/
 namespace lts
 {
-
 } /* end of namespace lts */
 
 /*===========================================================================*\
@@ -73,76 +56,138 @@ namespace lts
 namespace lts
 {
 
-inline bool chk_expr(const char* expr, bool status, std::ostream& ostream)
+static inline void close_fd(int fd)
 {
-    if (!status)
-        if (ostream)
-            ostream << "error: " << expr << " failed" << std::endl;
-
-    return status;
+    if (fd >= 0)
+        ::close(fd);
 }
 
-template<typename T>
-inline bool chk_min(const char* item_name, T item_value, T min, std::ostream& ostream)
+static inline void close_sockfd(int sockfd)
 {
-    if (item_value >= min)
-        return true;
-
-    if (ostream) {
-        ostream << "error: value of '" << item_name << "' " << HEXDEC(item_value);
-        ostream << " shall not be less than " << HEXDEC(min);
-        ostream << std::endl;
+    if (sockfd >= 0) {
+        ::shutdown(sockfd, SHUT_RD);
+        ::close(sockfd);
     }
-
-    return false;
 }
 
-template<typename T>
-inline bool chk_max(const char* item_name, T item_value, T max, std::ostream& ostream)
+static inline void flush_pipe(int fd)
 {
-    if (item_value <= max)
-        return true;
+    int status;
 
-    if (ostream) {
-        ostream << "error: value of '" << item_name << "' " << HEXDEC(item_value);
-        ostream << " shall not be greater than " << HEXDEC(max);
-        ostream << std::endl;
-    }
-
-    return false;
+    do {
+        char buf;
+        status = ::read(fd, &buf, sizeof(buf));
+    } while (status > 0);
 }
 
-template<typename T>
-inline bool chk_range(const char* item_name, T item_value, T min, T max, std::ostream& ostream)
+static inline int set_nonblocking_flag(int fd)
 {
-    if ((item_value >= min) && (item_value <= max))
-        return true;
+    int retval = -EFAULT;
 
-    if (ostream) {
-        ostream << "error: value of '" << item_name << "' " << HEXDEC(item_value);
-        ostream << " shall be in range [" << HEXDEC(min) << ", " << HEXDEC(max) << "]";
-        ostream << std::endl;
-    }
+    do {
+        int status;
+        int flags;
 
-    return false;
+        flags = ::fcntl(fd, F_GETFL);
+        assert("fcntl()" && ((flags == -1 /* error, errno is set */) || (flags >= 0 /* success */)));
+        if (flags == -1) {
+            retval = errno;
+            break;
+        }
+
+        flags |= O_NONBLOCK;
+
+        status = ::fcntl(fd, F_SETFL, flags);
+        assert("fcntl()" && ((status == -1 /* error, errno is set */) || (status == 0 /* success */)));
+        if (status == -1) {
+            retval = errno;
+            break;
+        }
+
+        retval = 0; /* success */
+    } while (0);
+
+    return retval;
+}
+
+static inline int clear_nonblocking_flag(int fd)
+{
+    int retval = -EFAULT;
+
+    do {
+        int status;
+        int flags;
+
+        flags = ::fcntl(fd, F_GETFL);
+        assert("fcntl()" && ((status == -1 /* error, errno is set */) || (status >= 0 /* success */)));
+        if (flags == -1) {
+            retval = errno;
+            break;
+        }
+
+        flags &= ~O_NONBLOCK;
+
+        status = ::fcntl(fd, F_SETFL, flags);
+        assert("fcntl()" && ((status == -1 /* error, errno is set */) || (status >= 0 /* success */)));
+        if (status == -1) {
+            retval = errno;
+            break;
+        }
+
+        retval = 0; /* success */
+    } while (0);
+
+    return retval;
+}
+
+static inline bool read_full(int fd, char* buffer, std::size_t size)
+{
+    bool retval = true;
+    std::size_t cnt = 0;
+
+    do {
+        ssize_t res = ::read(fd, buffer + cnt, size - cnt);
+        if (res < 0) {
+            retval = false;
+            break;
+        }
+        cnt += res;
+    } while (cnt < size);
+
+    return retval;
+}
+
+static inline bool write_full(int fd, const char* buffer, std::size_t size)
+{
+    bool retval = true;
+    std::size_t written = 0;
+
+    do {
+        ssize_t res = ::write(fd, buffer + written, size - written);
+        if (res < 0) {
+            retval = false;
+            break;
+        }
+        written += res;
+    } while (written < size);
+
+    return retval;
 }
 
 } /* end of namespace lts */
 
 /*===========================================================================*\
- * global object declarations
+ * global (external linkage) objects declarations
 \*===========================================================================*/
 namespace lts
 {
-
 } /* end of namespace lts */
 
 /*===========================================================================*\
- * function forward declarations
+ * function forward declarations (external linkage)
 \*===========================================================================*/
 namespace lts
 {
-
 } /* end of namespace lts */
 
 #endif /* _UTILITIES_HPP_ */

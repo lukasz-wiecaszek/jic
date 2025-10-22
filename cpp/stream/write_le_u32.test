@@ -1,0 +1,34 @@
+TEST(ostream_le, write_u32)
+{
+    uint8_t buffer[16] = {0};
+
+    lts::ostream_le stream_le(buffer, sizeof(buffer));
+    EXPECT_TRUE(stream_le.is_valid());
+
+    EXPECT_TRUE(stream_le.write_u32(0x03020100));
+    EXPECT_TRUE(stream_le.write_u32(0x07060504));
+    EXPECT_TRUE(stream_le.write_u32(0x8b8a8988));
+    EXPECT_TRUE(stream_le.write_u32(0x8f8e8d8c));
+
+    EXPECT_EQ(stream_le.tell(), 16);
+    EXPECT_EQ(stream_le.tell_bits(), 0);
+    ASSERT_NE(stream_le.data(), nullptr);
+    const uint8_t* d = stream_le.data();
+    uint8_t expected_buffer[] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f
+    };
+    EXPECT_EQ(std::memcmp(d, expected_buffer, std::size(expected_buffer)), 0);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(16, 0), before);
+            EXPECT_EQ(lts::stream_position(20, 0), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.write_u32(0));
+
+    stream_le.clear_error_function();
+    std::cout << (std::string)stream_le << std::endl;
+}

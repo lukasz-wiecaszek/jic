@@ -1,0 +1,99 @@
+
+TEST(istream_le, read_u32)
+{
+    uint32_t value;
+    uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                        0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
+
+    lts::istream_le stream_le(buffer, sizeof(buffer));
+    EXPECT_TRUE(stream_le.is_valid());
+
+    EXPECT_TRUE(stream_le.read_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x03020100), value);
+
+    EXPECT_TRUE(stream_le.read_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x07060504), value);
+
+    EXPECT_TRUE(stream_le.read_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x8b8a8988), value);
+
+    EXPECT_TRUE(stream_le.read_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x8f8e8d8c), value);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(16, 0), before);
+            EXPECT_EQ(lts::stream_position(20, 0), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.read_u32(value));
+
+    stream_le.skip_bits(1);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(16, 1), before);
+            EXPECT_EQ(lts::stream_position(20, 1), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.read_u32(value));
+
+    stream_le.clear_error_function();
+    std::cout << (std::string)stream_le << std::endl;
+}
+
+TEST(istream_le, peek_u32)
+{
+    uint32_t value;
+    uint8_t buffer[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                        0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f};
+
+    lts::istream_le stream_le(buffer, sizeof(buffer));
+    EXPECT_TRUE(stream_le.is_valid());
+
+    EXPECT_TRUE(stream_le.peek_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x03020100), value);
+
+    EXPECT_TRUE(stream_le.peek_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x03020100), value);
+
+    EXPECT_TRUE(stream_le.peek_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x03020100), value);
+
+    stream_le.skip(1);
+
+    EXPECT_TRUE(stream_le.peek_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x04030201), value);
+
+    stream_le.skip(11);
+
+    EXPECT_TRUE(stream_le.peek_u32(value));
+    EXPECT_EQ(static_cast<uint32_t>(0x8f8e8d8c), value);
+
+    stream_le.skip(1);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(13, 0), before);
+            EXPECT_EQ(lts::stream_position(17, 0), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.peek_u32(value));
+
+    stream_le.skip_bits(1);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(13, 1), before);
+            EXPECT_EQ(lts::stream_position(17, 1), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.peek_u32(value));
+
+    stream_le.clear_error_function();
+    std::cout << (std::string)stream_le << std::endl;
+}

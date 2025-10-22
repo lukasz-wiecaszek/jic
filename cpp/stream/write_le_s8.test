@@ -1,0 +1,46 @@
+TEST(ostream_le, write_s8)
+{
+    uint8_t buffer[16] = {0};
+
+    lts::ostream_le stream_le(buffer, sizeof(buffer));
+    EXPECT_TRUE(stream_le.is_valid());
+
+    EXPECT_TRUE(stream_le.write_s8(0x00));
+    EXPECT_TRUE(stream_le.write_s8(0x01));
+    EXPECT_TRUE(stream_le.write_s8(0x02));
+    EXPECT_TRUE(stream_le.write_s8(0x03));
+    EXPECT_TRUE(stream_le.write_s8(0x04));
+    EXPECT_TRUE(stream_le.write_s8(0x05));
+    EXPECT_TRUE(stream_le.write_s8(0x06));
+    EXPECT_TRUE(stream_le.write_s8(0x07));
+    EXPECT_TRUE(stream_le.write_s8(-120 /*0x88*/));
+    EXPECT_TRUE(stream_le.write_s8(-119 /*0x89*/));
+    EXPECT_TRUE(stream_le.write_s8(-118 /*0x8a*/));
+    EXPECT_TRUE(stream_le.write_s8(-117 /*0x8b*/));
+    EXPECT_TRUE(stream_le.write_s8(-116 /*0x8c*/));
+    EXPECT_TRUE(stream_le.write_s8(-115 /*0x8d*/));
+    EXPECT_TRUE(stream_le.write_s8(-114 /*0x8e*/));
+    EXPECT_TRUE(stream_le.write_s8(-113 /*0x8f*/));
+
+    EXPECT_EQ(stream_le.tell(), 16);
+    EXPECT_EQ(stream_le.tell_bits(), 0);
+    ASSERT_NE(stream_le.data(), nullptr);
+    const uint8_t* d = stream_le.data();
+    uint8_t expected_buffer[] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f
+    };
+    EXPECT_EQ(std::memcmp(d, expected_buffer, std::size(expected_buffer)), 0);
+
+    stream_le.set_error_function(
+        [](const lts::stream_position& before, const lts::stream_position& after){
+            EXPECT_EQ(lts::stream_position(16, 0), before);
+            EXPECT_EQ(lts::stream_position(17, 0), after);
+        }
+    );
+
+    EXPECT_FALSE(stream_le.write_s8(0));
+
+    stream_le.clear_error_function();
+    std::cout << (std::string)stream_le << std::endl;
+}

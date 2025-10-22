@@ -1,18 +1,10 @@
+/* SPDX-License-Identifier: MIT */
 /**
  * @file ilog2.hpp
  *
  * Integer base 2 logarithm calculation.
  *
  * @author Lukasz Wiecaszek <lukasz.wiecaszek@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU General Public License,
- * version 2, as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
  */
 
 #ifndef _ILOG2_HPP_
@@ -48,6 +40,8 @@ namespace lts
 template<typename T>
 constexpr int ilog2(T n)
 {
+    static_assert(std::is_integral<T>::value, "T must be an integral type");
+
     /* Because the noexcept operator always returns true for a constant expression, */
     /* it can be used to check if a particular invocation of a constexpr */
     /* takes the constant expression branch. */
