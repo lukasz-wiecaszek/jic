@@ -28,12 +28,11 @@
 *.gcno
 *.gcda
 
-# VSCODE
-.vscode/*
-*/.vscode/*
-*/*/.vscode/*
+# vscode
+**/.vscode/
 
 # CMake build
-build/*
-*/build/*
-*/*/build/*
+**/build/
+
+# pycache
+**/__pycache__/
